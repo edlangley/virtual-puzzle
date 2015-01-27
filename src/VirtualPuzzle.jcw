@@ -1,0 +1,26 @@
+! ** JCreator Workspace File (C)2000
+! ********** DO NOT EDIT *********
+
+VERSION := "1.00"
+LABEL := "VirtualPuzzle"
+
+! Start Project Structure
+#[BeginProject]SOURCE := "VirtualPuzzle.jcp" #[EndProject]
+
+! Start Last Document Structure
+#[BeginFile]SOURCE := "userImageRecFileHandler.java" #[EndFile]
+#[BeginFile]SOURCE := "userProgRecFileHandler.java" #[EndFile]
+#[BeginFile]SOURCE := "userProgRec.java" #[EndFile]
+#[BeginFile]SOURCE := "picIndexRecFileHandler.java" #[EndFile]
+#[BeginFile]SOURCE := "puzzle.java" #[EndFile]
+#[BeginFile]SOURCE := "UserImageRec.java" #[EndFile]
+#[BeginFile]SOURCE := "baseFileHandler.java" #[EndFile]
+#[BeginFile]SOURCE := "VirtualPuzzle.java" #[EndFile]
+#[BeginFile]SOURCE := "PicIndexRec.java" #[EndFile]
+#[BeginFile]SOURCE := "mainMenuDialog.java" #[EndFile]
+#[BeginFile]SOURCE := "loadPicsDialog.java" #[EndFile]
+#[BeginFile]SOURCE := "basicMenuDialog.java" #[EndFile]
+#[BeginFile]SOURCE := "doPuzzleDialog.java" #[EndFile]
+#[BeginFile]SOURCE := "nameMenuDialog.java" #[EndFile]
+#[BeginFile]SOURCE := "picSegment.java" #[EndFile]
+
