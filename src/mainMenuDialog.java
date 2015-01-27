@@ -1,10 +1,9 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 class mainMenuDialog extends basicMenuDialog implements ActionListener
 	{
-		puzzle puzzle1;
-		
 		//main menu
 		Button doPuzzle = new Button("Do a puzzle");
 		Button loadPics = new Button("Import Pictures");
@@ -23,13 +22,13 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 		userProgRec mainProgRec;
 		
 		//menu global vars for the puzzle:
-		int numsegs, picOffsetX picOffsetY, sizeLimit;
+//		int numsegs, picOffsetX, picOffsetY, sizeLimit;
 		
 		// other menus controlled by main:
 		nameMenuDialog nameMenu ;
 		
 		
-		public mainMenuDialog(Frame parent, userProgFName, userImageRecFName, picIndexFName)
+		public mainMenuDialog(Frame parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
 		{
 			super(parent);
 			nameMenu = new nameMenuDialog(parent, this, userProgFName);
@@ -66,15 +65,17 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 			add(bottom,BorderLayout.SOUTH);
 			
 		}
-		
+/*		
 		public void loadPuzzle(String picFilePath)
 		{
-			puzzle Puzzle1 = new puzzle(numsegs, int picOffsetX,
-				int picOffsetY, int limit, String picFilePath, this);
+		//	puzzle Puzzle1 = new puzzle(numsegs, int picOffsetX,
+		//		int picOffsetY, int limit, String picFilePath, this);
+			puzzle Puzzle1 = new puzzle(numsegs, 0,
+					0, 800, picFilePath, (Frame) this.getParent());
 			hide();
 		}
-		
-		public void loadProgRec(UserProgRec tempProgRec)
+*/		
+		public void loadProgRec(userProgRec tempProgRec)
 		{
 			mainProgRec = tempProgRec;
 			
@@ -82,16 +83,18 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 		
 		public void showWinScreen(int time, int numMoves)
 		{
-			Dialog winDialog = new Dialog(this.parent,"congratualtions!!", true)
+			Dialog winDialog = new Dialog((Frame) this.getParent(), "congratualtions!!", true);
 			winDialog.setSize(300, 200);
-			winDialog.setLayout(new flowlayout)
+			winDialog.setLayout(new FlowLayout());
 			winDialog.add(new Label("Well done, you won that puzzle in "+time+" seconds!"));
 			winDialog.add(new Label("with "+numMoves+" moves"));
-			windialog.show();
+			winDialog.show();
 		}
 		
 		public void actionPerformed(ActionEvent e)
-		{		
+		{
+			System.out.println("mainMenuDialog actionPerformed command: " + e.getActionCommand());
+			
 			if(e.getActionCommand() == "Quit")
 			{
 				dispose();

@@ -1,8 +1,10 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 class nameMenuDialog extends Dialog implements ActionListener
 {
+	mainMenuDialog mainMenu;
 	
 	Button ok = new Button("OK");
 	Button Cancel = new Button("Cancel");
@@ -13,17 +15,18 @@ class nameMenuDialog extends Dialog implements ActionListener
 	Label lab2 = new Label("If this is your first time using this software");
 	Label lab3 = new Label("click add.");
 	//file handler:
-	userProgFileHandler userProgFile;
+	userProgRecFileHandler userProgFile;
 	
-	public nameMenuDialog(Frame parent, mainMenuDialog main, String userProgFName)
+	public nameMenuDialog(Frame parent, mainMenuDialog main, String userProgFName) throws IOException
 	{
 		super(parent);
-		userProgFile = new userProgFileHandler(userProgFName);
+		mainMenu = main;
+		userProgFile = new userProgRecFileHandler(userProgFName);
 		//list stuff
 		for(int i = 0;i<userProgFile.numRecs;i++)
 		{
-			userProgFile.readRec(i);
-			nameList.additem(userProgFile.progRec.fName+" "+userProgFile.progRec.lName);
+			userProgFile.readUserRec(i);
+			nameList.add(userProgFile.progRec.fName+" "+userProgFile.progRec.lName);
 		}
 		
 		
@@ -44,7 +47,7 @@ class nameMenuDialog extends Dialog implements ActionListener
 		lab1.setBounds(20,30,300,15);
 		lab2.setBounds(20,50,300,15);
 		lab3.setBounds(20,65,300,10);
-		lst.setBounds(20,85,260,250);
+//		lst.setBounds(20,85,260,250);
 		
 		
 		ok.setBounds(54,345,72,23);
@@ -59,7 +62,7 @@ class nameMenuDialog extends Dialog implements ActionListener
 		add(lab1);
 		add(lab2);
 		add(lab3);
-		add(lst);
+//		add(lst);
 		add(ok);
 		add(Add);
 		add(Cancel);
@@ -78,8 +81,13 @@ class nameMenuDialog extends Dialog implements ActionListener
 		if(e.getActionCommand() == "OK")
 		{
 			int recNum = nameList.getSelectedIndex();
-			userProgFile.readRec(recNum);
-			main.loadProgRec(userProgFile.progRec)
+			try {
+				userProgFile.readUserRec(recNum);
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			mainMenu.loadProgRec(userProgFile.progRec);
 		}	
 	}		
 }

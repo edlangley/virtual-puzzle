@@ -4,16 +4,16 @@ import java.io.*;
 
 class picIndexRecFileHandler extends baseFileHandler
 {// extends class containing string handling methods
-	long numRecs;
-	String filename;
-	picIndexRec ImageRec = new picIndexRec();
+	static long numRecs;
+	static String filename;
+	static picIndexRec ImageRec = new picIndexRec();
 	
-	public picIndexFileHandler(String tempFileName) throws IOException
+	public picIndexRecFileHandler(String tempFileName) throws IOException
 	{
 		// name of file passed down from global variable
 		filename = tempFileName;
 		RandomAccessFile f1 = new RandomAccessFile(filename,"rw");
-		numRecs = (f1.length()/progrec.length);
+		numRecs = (f1.length()/ImageRec.length);
 	}
 	
 	static void addRec(String picSetID, int picID, String picName, 
@@ -21,12 +21,12 @@ class picIndexRecFileHandler extends baseFileHandler
 	{
 		
 		numRecs++;
-		int number = numRecs;//increments numrecs
+		int number = (int) numRecs;//increments numrecs
 		
 		if (recordInUse(number))
 		{
 			
-			addRec(); //reccurs until numRecs is unused
+			addRec(picSetID, picID, picName, picFileName, picDirectory); //reccurs until numRecs is unused
 		}
 		else
 		{
@@ -37,7 +37,7 @@ class picIndexRecFileHandler extends baseFileHandler
 			ImageRec.picName = picName;
 			ImageRec.picFileName = picFileName;
 			ImageRec.picDirectory = picDirectory;
-			writeUserRec(number);
+			writeRec(number);
 		}
 	}
 
@@ -56,28 +56,28 @@ class picIndexRecFileHandler extends baseFileHandler
 			ImageRec.picName = "";
 			ImageRec.picFileName = "";
 			ImageRec.picDirectory = "";
-			writeUserRec(number);
+			writeRec(number);
 		}
 	}
 
 	static void readRec(int number) throws IOException
 	{
 		RandomAccessFile rf = new RandomAccessFile(filename,"rw");
-		long position = number*progrec.length;// find the start of the rec
+		long position = number*ImageRec.length;// find the start of the rec
 		rf.seek(position);// go to the start
 		
-		ImageRec.picSetID = rf.rafReadString(rf);
+		ImageRec.picSetID = baseFileHandler.rafReadString(rf);
 		ImageRec.picID = rf.readInt();
-		ImageRec.picName = rf.rafReadString(rf);
-		ImageRec.picFileName = rf.rafReadString(rf);
-		ImageRec.picDirectory = rf.rafReadString(rf);
+		ImageRec.picName = baseFileHandler.rafReadString(rf);
+		ImageRec.picFileName = baseFileHandler.rafReadString(rf);
+		ImageRec.picDirectory = baseFileHandler.rafReadString(rf);
 		rf.close();
 	}
 
 	static void writeRec(int number) throws IOException
 	{
 		RandomAccessFile rf = new RandomAccessFile(filename,"rw");
-		long position = number*progrec.length;
+		long position = number*ImageRec.length;
 		rf.seek(position);
 		
 		
@@ -95,8 +95,8 @@ class picIndexRecFileHandler extends baseFileHandler
 	{
 		if (n > numRecs)
 			return false;
-		readUserRec(n);
-		if(progrec.status == 'E')
+		readRec(n);
+		if(ImageRec.picName == "")
 			return false;
 		else
 			return true;

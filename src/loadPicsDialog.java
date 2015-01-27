@@ -8,10 +8,12 @@ import java.awt.event.*;
 		List namelist = new List();
 		TextField imageNamebox = new TextField();
 		
+		Frame parentFrame;
+		
 		public loadPicsDialog(Frame parent, mainMenuDialog main)
 		{
 			super(parent);
-			
+			parentFrame = parent;
 		}
 		
 		public void actionPerformed(ActionEvent e)
@@ -27,7 +29,7 @@ import java.awt.event.*;
 				{
 					public void actionPerformed(ActionEvent e)
 					{ // Two arguments, defaults to open file:
-						 FileDialog d = new FileDialog(App.this, "What file do you want to open?");
+						 FileDialog d = new FileDialog(parentFrame, "What file do you want to open?");
 						 d.setFile("*.jpg");
 						 d.setDirectory("."); // Current directory
 						 d.show();

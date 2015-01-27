@@ -6,6 +6,8 @@ import java.util.*;
 
 class puzzle extends Panel implements Runnable
 {
+	VirtualPuzzle parentVPuzzle;
+	
 	//main image vars
 	int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY, numsegsWanted;// passed in
 	private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY;// calculated
@@ -33,8 +35,9 @@ class puzzle extends Panel implements Runnable
 	boolean won = false;
 
 	// init functions
-	public puzzle(int numsegs, int picOffsetX, int picOffsetY, int limit, String picName, Frame parent, mainMenuDialog)
+	public puzzle(VirtualPuzzle parent, int numsegs, int picOffsetX, int picOffsetY, int limit, String picName)
 	{
+		parentVPuzzle = parent;
 
 		numsegsWanted = numsegs;
 		offSetX = picOffsetX;
@@ -99,7 +102,7 @@ class puzzle extends Panel implements Runnable
 		while(true)
 		{
 			timeElapsed +=1;
-			timeText.setText(timeElapsed.toString());
+			timeText.setText(String.valueOf(timeElapsed));
 			try{
 				timer.sleep(1000);
 				}catch(InterruptedException e){return;}
@@ -199,7 +202,7 @@ class puzzle extends Panel implements Runnable
 						scaledSegSizeX,scaledSegSizeY);
 		}
 		if(won)
-			mainMenu.showWinScreen(timeElapsed, numMoves);
+			parentVPuzzle.showWinScreen(timeElapsed, numMovesMade);
 	}
 	
 	public void jumbleSegs(int numMoves)

@@ -4,40 +4,40 @@ import java.io.*;
 
 class userProgRecFileHandler extends baseFileHandler
 {// extends class containing string handling methods
-	long numRecs;
-	String filename;
-	userProgRec progrec = new userProgRec();
+	static long numRecs;
+	static String filename;
+	static userProgRec progRec = new userProgRec();
 	
-	public userProgFileHandler(String tempFileName) throws IOException
+	public userProgRecFileHandler(String tempFileName) throws IOException
 	{
 		// name of file passed down from global variable
 		filename = tempFileName;
 		RandomAccessFile f1 = new RandomAccessFile(filename,"rw");
-		numRecs = (f1.length()/progrec.length);
+		numRecs = (f1.length()/progRec.length);
 	}
 	
 	static void addRec(String firstName, String lastName) throws IOException
 	{
 		
 		numRecs++;
-		int number = numRecs;//increments numrecs
+		int number = (int) numRecs;//increments numrecs
 		
 		if (recordInUse(number))
 		{
 			
-			addRec(); //reccurs until numRecs is unused
+			addRec(firstName, lastName); //reccurs until numRecs is unused
 		}
 		else
 		{
 			
-			progrec.fName = firstName;
+			progRec.fName = firstName;
 			
-			progrec.lName = lastName;
-			progrec.status = 'U'; //U for in use/Used
-			progrec.points  = 0;
-			progrec.diffLevel = 0;
-			progrec.numPuzzlesDone = 0;
-			progrec.pupilImageFile = 0;
+			progRec.lName = lastName;
+			progRec.status = 'U'; //U for in use/Used
+			progRec.points  = 0;
+			progRec.diffLevel = 0;
+			progRec.numPuzzlesDone = 0;
+			progRec.pupilImageFile = 0;
 			writeUserRec(number);
 		}
 	}
@@ -51,13 +51,13 @@ class userProgRecFileHandler extends baseFileHandler
 		}
 		else
 		{// reset all the fields to blank
-			progrec.fName = "";
-			progrec.lName = "";
-			progrec.points = 0;
-			progrec.diffLevel = 0;
-			progrec.numPuzzlesDone = 0;
-			progrec.pupilImageFile = 0;
-			progrec.status = 'E';
+			progRec.fName = "";
+			progRec.lName = "";
+			progRec.points = 0;
+			progRec.diffLevel = 0;
+			progRec.numPuzzlesDone = 0;
+			progRec.pupilImageFile = 0;
+			progRec.status = 'E';
 			writeUserRec(number);
 		}
 	}
@@ -65,32 +65,32 @@ class userProgRecFileHandler extends baseFileHandler
 	static void readUserRec(int number) throws IOException
 	{
 		RandomAccessFile rf = new RandomAccessFile(filename,"rw");
-		long position = number*progrec.length;
+		long position = number*progRec.length;
 		rf.seek(position);
-		progrec.number = rf.readInt();
-		progrec.fName = rf.rafReadString(rf);
-		progrec.lName = rf.rafReadString(rf);
-		progrec.points = rf.readInt();
-		progrec.diffLevel = rf.readInt();
-		progrec.numPuzzlesDone = rf.readInt();
-		progrec.pupilImageFile = rf.readInt();
-		progrec.status = rf.readChar();
+		progRec.pupilID = rf.readInt();
+		progRec.fName = baseFileHandler.rafReadString(rf);
+		progRec.lName = baseFileHandler.rafReadString(rf);
+		progRec.points = rf.readInt();
+		progRec.diffLevel = rf.readInt();
+		progRec.numPuzzlesDone = rf.readInt();
+		progRec.pupilImageFile = rf.readInt();
+		progRec.status = rf.readChar();
 		rf.close();
 	}
 
 	static void writeUserRec(int number) throws IOException
 	{
 		RandomAccessFile rf = new RandomAccessFile(filename,"rw");
-		long position = number*progrec.length;
+		long position = number*progRec.length;
 		rf.seek(position);
-		rf.writeInt(progrec.number);
-		rafWriteString(rf,progrec.fName,40);
-		rafWriteString(rf,progrec.lName,40);
-		rf.writeInt(progrec.points);
-		rf.writeInt(progrec.diffLevel);
-		rf.writeInt(progrec.numPuzzlesDone);
-		rf.writeInt(progrec.pupilImageFile);
-		rf.writeChar(progrec.status);
+		rf.writeInt(progRec.pupilID);
+		rafWriteString(rf,progRec.fName,40);
+		rafWriteString(rf,progRec.lName,40);
+		rf.writeInt(progRec.points);
+		rf.writeInt(progRec.diffLevel);
+		rf.writeInt(progRec.numPuzzlesDone);
+		rf.writeInt(progRec.pupilImageFile);
+		rf.writeChar(progRec.status);
 		
 		rf.close();
 	}
@@ -101,7 +101,7 @@ class userProgRecFileHandler extends baseFileHandler
 		if (n > numRecs)
 			return false;
 		readUserRec(n);
-		if(progrec.status == 'E')
+		if(progRec.status == 'E')
 			return false;
 		else
 			return true;

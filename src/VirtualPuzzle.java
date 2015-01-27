@@ -1,22 +1,38 @@
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
 
 class VirtualPuzzle extends Frame
 	implements ActionListener, MouseListener, MouseMotionListener, KeyListener
 {
+	// Hard coded for now:
+	String userProgFName = "data/ed.user";
+	String userImageRecFName = "None";
+	String picIndexFName = "None";
+	
+	int numsegs = 16;
+	int picOffsetX = 0;
+	int picOffsetY = 0;
+	int maxPuzzleScaledDimensionPx = 800;
+	String picFilePath = "data/atlanta_downtown_smaller.jpg";
+	
+	
 	Menu f = new Menu("File");
 	
+	puzzle puzzle1;
 	mainMenuDialog mainMenu;
 	
-	public static void main(String args[])
+	public static void main(String args[]) throws IOException
 	{
 		VirtualPuzzle mainFrame = new VirtualPuzzle();
 		mainFrame.setSize(800, 600);
-		mainFrame.setTitle("Virtual Puzzle for Children");
+		mainFrame.setTitle("Virtual Puzzle");
 		mainFrame.setVisible(true);
+		
+		mainFrame.showMainMenu();
 	}
 	
-	public VirtualPuzzle()
+	public VirtualPuzzle() throws IOException
 	{
 		addWindowListener(new WindowAdapter()
 		{
@@ -34,8 +50,29 @@ class VirtualPuzzle extends Frame
 		f.addSeparator();
 		f.add(new MenuItem("Exit"));
 		
-		mainMenu = new mainMenuDialog();
+		mainMenu = new mainMenuDialog(this, userProgFName, userImageRecFName, picIndexFName);
 	}
+	
+	public void showMainMenu()
+	{
+		mainMenu.show();
+	}
+	
+	public void loadPuzzle(String picFilePath)
+	{
+	//	puzzle Puzzle1 = new puzzle(numsegs, int picOffsetX,
+	//		int picOffsetY, int limit, String picFilePath, this);
+		
+		puzzle Puzzle1 = new puzzle(this, numsegs, picOffsetX,
+				picOffsetY, maxPuzzleScaledDimensionPx, picFilePath);
+				
+	}
+	
+	public void showWinScreen(int time, int numMoves)
+	{
+		mainMenu.showWinScreen(time, numMoves);
+	}
+	
 	public void actionPerformed(ActionEvent e)
 	{
 	}
@@ -45,7 +82,7 @@ class VirtualPuzzle extends Frame
 		//System.out.println("got to mouseclicked: x: "+e.getX()+" y: "+e.getY());
 		if(puzzle1.ready)
 		{
-			mainMenu.puzzle1.findSegMouse(e.getX(),e.getY());
+			puzzle1.findSegMouse(e.getX(),e.getY());
 		}
 	}
 
@@ -82,7 +119,7 @@ class VirtualPuzzle extends Frame
 		//System.out.println("Key pressed");
 		if(puzzle1.ready)
 		{
-			mainMenu.puzzle1.findSegKeyboard(e);
+			puzzle1.findSegKeyboard(e);
 		}
 	}
 	
