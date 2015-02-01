@@ -25,14 +25,14 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 //		int numsegs, picOffsetX, picOffsetY, sizeLimit;
 		
 		// other menus controlled by main:
-		nameMenuDialog nameMenu ;
+//		nameMenuDialog nameMenu ;
+		VirtualPuzzle parentVPuzzle;
 		
-		
-		public mainMenuDialog(Frame parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
+		public mainMenuDialog(VirtualPuzzle parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
 		{
 			super(parent);
-			nameMenu = new nameMenuDialog(parent, this, userProgFName);
-			
+//			nameMenu = new nameMenuDialog(parent, this, userProgFName);
+			parentVPuzzle = parent;
 			
 			doPuzzle.addActionListener(this);
 			loadPics.addActionListener(this);
@@ -100,7 +100,12 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 				dispose();
 				System.exit(0);
 			}
-			if(e.getActionCommand() == "loadPics")
+			else if(e.getActionCommand() == "Do a puzzle")
+			{
+				hide();
+				parentVPuzzle.showPuzzleMenu();	
+			}
+			else if(e.getActionCommand() == "loadPics")
 			{
 				hide();
 				//loadPicsDialog1.show();	

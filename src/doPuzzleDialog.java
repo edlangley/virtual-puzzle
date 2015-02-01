@@ -7,16 +7,16 @@ class doPuzzleDialog extends basicMenuDialog implements ActionListener
 	Label lab1 = new Label("Choose a picture");
 	Button go = new Button("Go");
 	List puzzleList = new List();
-	String indexfilename;
+	picIndexRecFileHandler picIndex;
 	
 	VirtualPuzzle parentVPuzzle;
 	
-	public doPuzzleDialog(VirtualPuzzle parent, mainMenuDialog mainMenu, picIndexRecFileHandler picIndex) throws IOException
+	public doPuzzleDialog(VirtualPuzzle parent, String picRecordFileName) throws IOException
 	{
 		super(parent);
 		parentVPuzzle = parent;
 		
-		indexfilename = picIndex.filename;
+		picIndex = new picIndexRecFileHandler(picRecordFileName);
 		
 		for(int i = 0;i<picIndex.numRecs;i++)
 		{
@@ -49,6 +49,7 @@ class doPuzzleDialog extends basicMenuDialog implements ActionListener
 		}
 		if(e.getActionCommand() == "Go")
 		{
+/*
 			picIndexRecFileHandler picIndex = null;
 			try {
 				picIndex = new picIndexRecFileHandler(indexfilename);
@@ -56,6 +57,7 @@ class doPuzzleDialog extends basicMenuDialog implements ActionListener
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+*/
 			int recNum = puzzleList.getSelectedIndex();
 			try {
 				picIndex.readRec(recNum);

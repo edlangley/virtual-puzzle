@@ -8,9 +8,9 @@ class puzzle extends Panel implements Runnable
 {
 	VirtualPuzzle parentVPuzzle;
 	
-	//main image vars
-	int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY, numsegsWanted;// passed in
-	private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY;// calculated
+
+	private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY, numsegsWanted; // passed in
+	private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY; // calculated
 	private int scaledSegSizeX, scaledSegSizeY;
 
 	private int blankIndexX, blankIndexY;
@@ -34,11 +34,13 @@ class puzzle extends Panel implements Runnable
 	boolean ready = false;
 	boolean won = false;
 
-	// init functions
-	public puzzle(VirtualPuzzle parent, int numsegs, int picOffsetX, int picOffsetY, int limit, String picName)
+	public puzzle(VirtualPuzzle parent)
 	{
-		parentVPuzzle = parent;
-
+	    parentVPuzzle = parent;
+	}
+	
+	public boolean load(String picName, int numsegs, int picOffsetX, int picOffsetY, int limit)
+	{
 		numsegsWanted = numsegs;
 		offSetX = picOffsetX;
 		offSetY = picOffsetY;
@@ -46,43 +48,134 @@ class puzzle extends Panel implements Runnable
 		puzzleHeightLimit = limit;
 		timeText.setAlignment(Label.LEFT);
 		p1.add(timeText);
-		parent.add(p1, BorderLayout.SOUTH);
+		parentVPuzzle.add(p1, BorderLayout.SOUTH);
 
 		loaded = loadImage(picName);
 		if(loaded)
-			{
-				setNumSegs(mainPic);//set segsizes of actual image
-				
-				positions = new picSegment[numSegsX][numSegsY];//Create the picSegment array
-				scaleImage(mainPic);// set scaled segsizes for puzzle
-				
-				for(int x = 0; x< numSegsX; x++)   //initialise each element
-					for(int y = 0; y< numSegsY; y++)
-					{
-						positions[x][y] = new picSegment(picSegSizeX*x, picSegSizeY*y, picSegSizeX, picSegSizeY);
-						//put actual positions of segs into array:
-						positions[x][y].setActualPos(scaledSegSizeX*x, scaledSegSizeY*y);
-					}	
-				
-				//set position of blank seg as lower left
-				blankIndexX = numSegsX;
-				blankIndexY = numSegsY;
-				blankIndexX--; blankIndexY--;
-				
-				//keep blank index source positions 0 to get through won check
-				positions[blankIndexX][blankIndexY].correctsX = 0;
-				positions[blankIndexX][blankIndexY].correctsY = 0;
-				
-				ready = true; //ready for user to play puzzle
-				jumbleSegs(1000);//jumble up puzzle before they start
-				timer.start();// start the clock
-			}
+		{
+			setNumSegs(mainPic);//set segsizes of actual image
+			
+			positions = new picSegment[numSegsX][numSegsY];//Create the picSegment array
+			scaleImage(mainPic);// set scaled segsizes for puzzle
+			
+			for(int x = 0; x< numSegsX; x++)   //initialise each element
+				for(int y = 0; y< numSegsY; y++)
+				{
+					positions[x][y] = new picSegment(picSegSizeX*x, picSegSizeY*y, picSegSizeX, picSegSizeY);
+					//put actual positions of segs into array:
+					positions[x][y].setActualPos(scaledSegSizeX*x, scaledSegSizeY*y);
+				}	
+			
+			//set position of blank seg as lower left
+			blankIndexX = numSegsX;
+			blankIndexY = numSegsY;
+			blankIndexX--; blankIndexY--;
+			
+    		//keep blank index source positions 0 to get through won check
+			positions[blankIndexX][blankIndexY].correctsX = 0;
+			positions[blankIndexX][blankIndexY].correctsY = 0;
+			
+			ready = true; //ready for user to play puzzle
+			//show();
+			jumbleSegs(1000);//jumble up puzzle before they start
+			timer.start();// start the clock
+		}
 		else
+		{
 			System.out.println("LoadImage() error");
+			return false;
+		}
 		
-	}//end of puzzle init
+		return true;
+	}
 
-	public boolean loadImage(String picName)
+    public void run()
+    {
+        
+        while(true)
+        {
+            timeElapsed +=1;
+            timeText.setText(String.valueOf(timeElapsed));
+            try{
+                timer.sleep(1000);
+                }catch(InterruptedException e){return;}
+        }
+    }
+
+    public void paint(Graphics g)
+    {
+        g.setColor(Color.blue);
+        
+        if(ready)
+        {
+            //draw each seg in array with a nested for loop:
+            for(int x = 0; x< numSegsX; x++)
+            {
+                for(int y= 0; y< numSegsY; y++)
+                {
+                    
+                    g.drawImage(mainPic, offSetX+positions[x][y].dX, offSetY+positions[x][y].dY, 
+                                offSetX+positions[x][y].dX+scaledSegSizeX, 
+                                offSetY+positions[x][y].dY+scaledSegSizeY, positions[x][y].sX, 
+                                positions[x][y].sY, positions[x][y].sX+picSegSizeX, 
+                                positions[x][y].sY+picSegSizeY, this);
+                }
+            }
+            //then draw a blank box at blank indexes
+            g.fillRect(offSetX+positions[blankIndexX][blankIndexY].dX, 
+                        offSetY+positions[blankIndexX][blankIndexY].dY, 
+                        scaledSegSizeX,scaledSegSizeY);
+        }
+        if(won)
+            parentVPuzzle.showWinScreen(timeElapsed, numMovesMade);
+    }  
+    
+    public void findSegKeyboard(KeyEvent e)
+    {
+        if(e.getKeyCode() == e.VK_UP)
+        {
+            System.out.println("Up");
+            swapSeg(blankIndexX, blankIndexY-1, true);
+        }
+        if(e.getKeyCode() == e.VK_DOWN)
+        {
+            System.out.println("Down");
+            swapSeg(blankIndexX, blankIndexY+1, true);
+        }
+        if(e.getKeyCode() == e.VK_LEFT)
+        {
+            System.out.println("Left");
+            swapSeg(blankIndexX-1, blankIndexY, true);
+        }
+        if(e.getKeyCode() == e.VK_RIGHT)
+        {
+            System.out.println("Right");
+            swapSeg(blankIndexX+1, blankIndexY, true);
+        }
+    }
+    
+    public void findSegMouse(int x, int y)
+    {
+
+        boolean foundX = false;
+        boolean foundY = false;
+        boolean cancel = false;
+        int indexX = 0;
+        int indexY = 0;
+        
+        x -= offSetX;
+        y -= offSetY;
+        System.out.println("offSetX - "+offSetX);
+        System.out.println("offSetY - "+offSetY);
+        
+        indexX = x/scaledSegSizeX;
+        indexY = y/scaledSegSizeY;
+        System.out.println("Found X - "+indexX);
+        System.out.println("Found Y - "+indexY);
+        swapSeg(indexX, indexY, true);
+    }
+
+	private boolean loadImage(String picName)
 	{
 		mainPic = toolkit.getImage(picName);
 		track.addImage(mainPic, 0);
@@ -96,20 +189,7 @@ class puzzle extends Panel implements Runnable
 
 	}
 
-	public void run()
-	{
-		
-		while(true)
-		{
-			timeElapsed +=1;
-			timeText.setText(String.valueOf(timeElapsed));
-			try{
-				timer.sleep(1000);
-				}catch(InterruptedException e){return;}
-		}
-	}
-
-	public void setNumSegs(Image tempPic)//calculate no. of segs in picture:
+	private void setNumSegs(Image tempPic)//calculate no. of segs in picture:
 	{//modifies numsegsX, numsegsY, picSegSizeX, picSegSizeY
 					
 		int height = tempPic.getHeight(this);
@@ -140,7 +220,7 @@ class puzzle extends Panel implements Runnable
 			}
 	}
 
-	public void scaleImage(Image pic1)
+	private void scaleImage(Image pic1)
 	{//scales the pic segment size by altering scaledSegSizeY & scaledSegSizeX
 
 		if(loaded)
@@ -174,38 +254,8 @@ class puzzle extends Panel implements Runnable
 		}
 		
 	}
-
-	// segment moving functions
-
-	public void paint(Graphics g)
-	{
-		g.setColor(Color.blue);
-		
-		if(ready)
-		{
-			//draw each seg in array with a nested for loop:
-			for(int x = 0; x< numSegsX; x++)
-			{
-				for(int y= 0; y< numSegsY; y++)
-				{
-					
-					g.drawImage(mainPic, offSetX+positions[x][y].dX, offSetY+positions[x][y].dY, 
-								offSetX+positions[x][y].dX+scaledSegSizeX, 
-								offSetY+positions[x][y].dY+scaledSegSizeY, positions[x][y].sX, 
-								positions[x][y].sY, positions[x][y].sX+picSegSizeX, 
-								positions[x][y].sY+picSegSizeY, this);
-				}
-			}
-			//then draw a blank box at blank indexes
-			g.fillRect(offSetX+positions[blankIndexX][blankIndexY].dX, 
-						offSetY+positions[blankIndexX][blankIndexY].dY, 
-						scaledSegSizeX,scaledSegSizeY);
-		}
-		if(won)
-			parentVPuzzle.showWinScreen(timeElapsed, numMovesMade);
-	}
 	
-	public void jumbleSegs(int numMoves)
+	private void jumbleSegs(int numMoves)
 	{
 		int u = 0;int d = 0;int l = 0;int right = 0;
 		for(int i=0; i<numMoves;i++)
@@ -233,54 +283,9 @@ class puzzle extends Panel implements Runnable
 				swapSeg(blankIndexX+1, blankIndexY, false);	
 			}
 		}
-	}	
-	
-	public void findSegKeyboard(KeyEvent e)
-	{
-		if(e.getKeyCode() == e.VK_UP)
-		{
-			System.out.println("Up");
-			swapSeg(blankIndexX, blankIndexY-1, true);
-		}
-		if(e.getKeyCode() == e.VK_DOWN)
-		{
-			System.out.println("Down");
-			swapSeg(blankIndexX, blankIndexY+1, true);
-		}
-		if(e.getKeyCode() == e.VK_LEFT)
-		{
-			System.out.println("Left");
-			swapSeg(blankIndexX-1, blankIndexY, true);
-		}
-		if(e.getKeyCode() == e.VK_RIGHT)
-		{
-			System.out.println("Right");
-			swapSeg(blankIndexX+1, blankIndexY, true);
-		}
 	}
 	
-	public void findSegMouse(int x, int y)
-	{
-
-		boolean foundX = false;
-		boolean foundY = false;
-		boolean cancel = false;
-		int indexX = 0;
-		int indexY = 0;
-		
-		x -= offSetX;
-		y -= offSetY;
-		System.out.println("offSetX - "+offSetX);
-		System.out.println("offSetY - "+offSetY);
-		
-		indexX = x/scaledSegSizeX;
-		indexY = y/scaledSegSizeY;
-		System.out.println("Found X - "+indexX);
-		System.out.println("Found Y - "+indexY);
-		swapSeg(indexX, indexY, true);
-	}//end of findSeg()
-
-	public boolean swapSeg(int indexX, int indexY, boolean isPlayer)
+	private boolean swapSeg(int indexX, int indexY, boolean isPlayer)
 	{						// indexes of tile to swap with blank
 		
 		if( (indexX<0 || indexX>=numSegsX) || (indexY<0 || indexY>=numSegsY) )
@@ -321,7 +326,7 @@ class puzzle extends Panel implements Runnable
 		return(true); //success!
 	}//end of swapSeg
 	
-	public boolean checkForWon()
+	private boolean checkForWon()
 	{
 		for(int x = 0; x< numSegsX; x++)
 		{

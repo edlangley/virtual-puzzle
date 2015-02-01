@@ -2,6 +2,17 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
+/*
+ * TODO:
+ * Rename:
+ * mainMenuDialog -> startingOptionsDialog
+ * doPuzzleDialog -> puzzleChooseDialog
+ * nameMenuDialog -> userChooseDialog
+ * 
+ */
+
+
+
 class VirtualPuzzle extends Frame
 	implements ActionListener, MouseListener, MouseMotionListener, KeyListener
 {
@@ -10,17 +21,19 @@ class VirtualPuzzle extends Frame
 	String userImageRecFName = "None";
 	String picIndexFName = "None";
 	
-	int numsegs = 16;
-	int picOffsetX = 0;
-	int picOffsetY = 0;
+	int numsegs = 3;
+	int picOffsetX = 10;
+	int picOffsetY = 10;
 	int maxPuzzleScaledDimensionPx = 800;
-	String picFilePath = "data/atlanta_downtown_smaller.jpg";
+	String picFilePath = "data/the_park.jpg";
+	//String picFilePath = "data/Testpic2.jpg";
 	
-	
-	Menu f = new Menu("File");
+	MenuBar menuBar = new MenuBar();
+	Menu fileMenu = new Menu("File");
 	
 	puzzle puzzle1;
 	mainMenuDialog mainMenu;
+	doPuzzleDialog puzzleDialog;
 	
 	public static void main(String args[]) throws IOException
 	{
@@ -42,15 +55,27 @@ class VirtualPuzzle extends Frame
 				System.exit(0);
 			}
 		});
+		
+		setLayout(new BorderLayout());
+		
 		MenuItem[] file = { new MenuItem("Back to Logon"),
 							new MenuItem("Back to Menu"),
-							new MenuItem("Pause")};
+							new MenuItem("Pause") };
 		for(int i = 0;i<file.length;i++)
-			f.add(file[i]);
-		f.addSeparator();
-		f.add(new MenuItem("Exit"));
+			fileMenu.add(file[i]);
+		fileMenu.addSeparator();
+		fileMenu.add(new MenuItem("Exit"));
+		
+		menuBar.add(fileMenu);
+		setMenuBar(menuBar);
 		
 		mainMenu = new mainMenuDialog(this, userProgFName, userImageRecFName, picIndexFName);
+		puzzleDialog = new doPuzzleDialog(this, userImageRecFName);
+		
+		puzzle1 = new puzzle(this);
+		puzzle1.addMouseListener(this);
+		puzzle1.addKeyListener(this);
+		add(puzzle1, BorderLayout.CENTER);
 	}
 	
 	public void showMainMenu()
@@ -58,14 +83,18 @@ class VirtualPuzzle extends Frame
 		mainMenu.show();
 	}
 	
+	public void showPuzzleMenu()
+	{
+		//puzzleDialog.show();
+		
+		// For interim testing:
+		loadPuzzle(picFilePath);
+	}
+	
 	public void loadPuzzle(String picFilePath)
 	{
-	//	puzzle Puzzle1 = new puzzle(numsegs, int picOffsetX,
-	//		int picOffsetY, int limit, String picFilePath, this);
-		
-		puzzle Puzzle1 = new puzzle(this, numsegs, picOffsetX,
-				picOffsetY, maxPuzzleScaledDimensionPx, picFilePath);
-				
+		puzzle1.load(picFilePath, numsegs, picOffsetX,
+	            picOffsetY, maxPuzzleScaledDimensionPx);
 	}
 	
 	public void showWinScreen(int time, int numMoves)
