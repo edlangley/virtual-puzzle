@@ -2,13 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class picIndexRecFileHandler extends baseFileHandler
+class PicFileHandler extends BaseFileHandler
 {// extends class containing string handling methods
     static long numRecs;
     static String filename;
-    static picIndexRec ImageRec = new picIndexRec();
+    static PicFileRec ImageRec = new PicFileRec();
     
-    public picIndexRecFileHandler(String tempFileName) throws IOException
+    public PicFileHandler(String tempFileName) throws IOException
     {
         // name of file passed down from global variable
         filename = tempFileName;
@@ -66,11 +66,11 @@ class picIndexRecFileHandler extends baseFileHandler
         long position = number*ImageRec.length;// find the start of the rec
         rf.seek(position);// go to the start
         
-        ImageRec.picSetID = baseFileHandler.rafReadString(rf);
+        ImageRec.picSetID = BaseFileHandler.rafReadString(rf);
         ImageRec.picID = rf.readInt();
-        ImageRec.picName = baseFileHandler.rafReadString(rf);
-        ImageRec.picFileName = baseFileHandler.rafReadString(rf);
-        ImageRec.picDirectory = baseFileHandler.rafReadString(rf);
+        ImageRec.picName = BaseFileHandler.rafReadString(rf);
+        ImageRec.picFileName = BaseFileHandler.rafReadString(rf);
+        ImageRec.picDirectory = BaseFileHandler.rafReadString(rf);
         rf.close();
     }
 

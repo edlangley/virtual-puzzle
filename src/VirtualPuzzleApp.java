@@ -5,15 +5,27 @@ import java.io.IOException;
 /*
  * TODO:
  * Rename:
- * mainMenuDialog -> startingOptionsDialog
- * doPuzzleDialog -> puzzleChooseDialog
- * nameMenuDialog -> userChooseDialog
- * 
+ * baseFileHandler -> BaseFileHandler
+ * basicMenuDialog -> BaseDialog
+ * chooseDifficultyDialog -> ChooseDifficultyDialog
+ * doPuzzleDialog -> ChoosePuzzleDialog
+ * loadPicsDialog -> LoadPicsDialog
+ * mainMenuDialog -> MainOptionsDialog
+ * nameMenuDialog -> ChooseUserDialog
+ * picIndexRec -> PicFileRec
+ * picIndexRecFileHandler -> PicFileHandler
+ * picSegment -> PuzzleSegment
+ * puzzle -> Puzzle
+ * userImageRec -> UserPicScoreFileRec
+ * userImageRecFileHandler -> UserPicScoreFileHandler
+ * userProgRec -> UserProgressFileRec
+ * userProgRecFileHandler -> UserProgressFileHandler
+ * VirtualPuzzle -> VirtualPuzzleApp
  */
 
 
 
-class VirtualPuzzle extends Frame
+class VirtualPuzzleApp extends Frame
     implements ActionListener, MouseListener, MouseMotionListener, KeyListener
 {
     // Hard coded for now:
@@ -31,13 +43,13 @@ class VirtualPuzzle extends Frame
     MenuBar menuBar = new MenuBar();
     Menu fileMenu = new Menu("File");
     
-    puzzle puzzle1;
-    mainMenuDialog mainMenu;
-    doPuzzleDialog puzzleDialog;
+    Puzzle puzzle1;
+    MainOptionsDialog mainMenu;
+    ChoosePuzzleDialog puzzleDialog;
     
     public static void main(String args[]) throws IOException
     {
-        VirtualPuzzle mainFrame = new VirtualPuzzle();
+        VirtualPuzzleApp mainFrame = new VirtualPuzzleApp();
         mainFrame.setSize(800, 600);
         mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
@@ -45,7 +57,7 @@ class VirtualPuzzle extends Frame
         mainFrame.showMainMenu();
     }
     
-    public VirtualPuzzle() throws IOException
+    public VirtualPuzzleApp() throws IOException
     {
         addWindowListener(new WindowAdapter()
         {
@@ -69,10 +81,10 @@ class VirtualPuzzle extends Frame
         menuBar.add(fileMenu);
         setMenuBar(menuBar);
         
-        mainMenu = new mainMenuDialog(this, userProgFName, userImageRecFName, picIndexFName);
-        puzzleDialog = new doPuzzleDialog(this, userImageRecFName);
+        mainMenu = new MainOptionsDialog(this, userProgFName, userImageRecFName, picIndexFName);
+        puzzleDialog = new ChoosePuzzleDialog(this, userImageRecFName);
         
-        puzzle1 = new puzzle(this);
+        puzzle1 = new Puzzle(this);
         puzzle1.addMouseListener(this);
         puzzle1.addKeyListener(this);
         add(puzzle1, BorderLayout.CENTER);

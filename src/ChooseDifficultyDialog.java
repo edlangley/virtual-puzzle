@@ -1,13 +1,13 @@
 import java.awt.*;
 import java.awt.event.*;
 
-class chooseDifficultyDialog extends basicMenuDialog implements ActionListener
+class ChooseDifficultyDialog extends BaseDialog implements ActionListener
     {
         //load pics button
         Button browse = new Button("Browse...");
         List namelist = new List();
         
-        public chooseDifficultyDialog(Frame parent, mainMenuDialog main)
+        public ChooseDifficultyDialog(Frame parent, MainOptionsDialog main)
         {
             super(parent);
             

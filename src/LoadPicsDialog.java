@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 
-class loadPicsDialog extends basicMenuDialog implements ActionListener
+class LoadPicsDialog extends BaseDialog implements ActionListener
 {
     //load pics button
     Button browse = new Button("Browse...");
@@ -10,7 +10,7 @@ class loadPicsDialog extends basicMenuDialog implements ActionListener
     
     Frame parentFrame;
     
-    public loadPicsDialog(Frame parent, mainMenuDialog main)
+    public LoadPicsDialog(Frame parent, MainOptionsDialog main)
     {
         super(parent);
         parentFrame = parent;

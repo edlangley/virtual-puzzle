@@ -1,7 +1,7 @@
 import java.awt.*;
 import java.awt.event.*;
 
-class basicMenuDialog extends Dialog
+class BaseDialog extends Dialog
 {
     Panel top = new Panel();
     Panel main = new Panel();
@@ -11,7 +11,7 @@ class basicMenuDialog extends Dialog
     Button cancel = new Button("Cancel");
     Button back = new Button("Back to menu");
     
-    public basicMenuDialog(Frame parent)
+    public BaseDialog(Frame parent)
     {
         super(parent);
         addWindowListener(new WindowAdapter()

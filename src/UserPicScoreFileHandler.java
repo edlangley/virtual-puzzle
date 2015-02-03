@@ -2,13 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class userImageRecFileHandler extends baseFileHandler
+class UserPicScoreFileHandler extends BaseFileHandler
 {// extends class containing string handling methods
     static long numRecs;
     static String filename;
-    static userImageRec ImageRec = new userImageRec();
+    static UserPicScoreFileRec ImageRec = new UserPicScoreFileRec();
     
-    public userImageRecFileHandler(String tempFileName) throws IOException
+    public UserPicScoreFileHandler(String tempFileName) throws IOException
     {
         // name of file passed down from global variable
         filename = tempFileName;
@@ -67,7 +67,7 @@ class userImageRecFileHandler extends baseFileHandler
         long position = number*ImageRec.length;
         rf.seek(position);
         ImageRec.picID = rf.readInt();
-        ImageRec.picSetID = baseFileHandler.rafReadString(rf);
+        ImageRec.picSetID = BaseFileHandler.rafReadString(rf);
         
         ImageRec.completed = rf.readBoolean();
         ImageRec.diffLevel = rf.readInt();

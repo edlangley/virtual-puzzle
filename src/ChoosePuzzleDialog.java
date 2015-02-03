@@ -2,21 +2,21 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-class doPuzzleDialog extends basicMenuDialog implements ActionListener
+class ChoosePuzzleDialog extends BaseDialog implements ActionListener
 {
     Label lab1 = new Label("Choose a picture");
     Button go = new Button("Go");
     List puzzleList = new List();
-    picIndexRecFileHandler picIndex;
+    PicFileHandler picIndex;
     
-    VirtualPuzzle parentVPuzzle;
+    VirtualPuzzleApp parentVPuzzle;
     
-    public doPuzzleDialog(VirtualPuzzle parent, String picRecordFileName) throws IOException
+    public ChoosePuzzleDialog(VirtualPuzzleApp parent, String picRecordFileName) throws IOException
     {
         super(parent);
         parentVPuzzle = parent;
         
-        picIndex = new picIndexRecFileHandler(picRecordFileName);
+        picIndex = new PicFileHandler(picRecordFileName);
         
         for(int i = 0;i<picIndex.numRecs;i++)
         {
@@ -50,9 +50,9 @@ class doPuzzleDialog extends basicMenuDialog implements ActionListener
         if(e.getActionCommand() == "Go")
         {
 /*
-            picIndexRecFileHandler picIndex = null;
+            PicFileHandler picIndex = null;
             try {
-                picIndex = new picIndexRecFileHandler(indexfilename);
+                picIndex = new PicFileHandler(indexfilename);
             } catch (IOException e1) {
                 // TODO Auto-generated catch block
                 e1.printStackTrace();

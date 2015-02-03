@@ -4,9 +4,9 @@ import java.awt.Toolkit.*;
 import java.awt.image.*;
 import java.util.*;
 
-class puzzle extends Panel implements Runnable
+class Puzzle extends Panel implements Runnable
 {
-    VirtualPuzzle parentVPuzzle;
+    VirtualPuzzleApp parentVPuzzle;
     
 
     private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY, numsegsWanted; // passed in
@@ -14,7 +14,7 @@ class puzzle extends Panel implements Runnable
     private int scaledSegSizeX, scaledSegSizeY;
 
     private int blankIndexX, blankIndexY;
-    picSegment[][] positions;
+    PuzzleSegment[][] positions;
     Image mainPic = null;
 
     Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -34,7 +34,7 @@ class puzzle extends Panel implements Runnable
     boolean ready = false;
     boolean won = false;
 
-    public puzzle(VirtualPuzzle parent)
+    public Puzzle(VirtualPuzzleApp parent)
     {
         parentVPuzzle = parent;
     }
@@ -55,13 +55,13 @@ class puzzle extends Panel implements Runnable
         {
             setNumSegs(mainPic);//set segsizes of actual image
             
-            positions = new picSegment[numSegsX][numSegsY];//Create the picSegment array
-            scaleImage(mainPic);// set scaled segsizes for puzzle
+            positions = new PuzzleSegment[numSegsX][numSegsY];//Create the PuzzleSegment array
+            scaleImage(mainPic);// set scaled segsizes for Puzzle
             
             for(int x = 0; x< numSegsX; x++)   //initialise each element
                 for(int y = 0; y< numSegsY; y++)
                 {
-                    positions[x][y] = new picSegment(picSegSizeX*x, picSegSizeY*y, picSegSizeX, picSegSizeY);
+                    positions[x][y] = new PuzzleSegment(picSegSizeX*x, picSegSizeY*y, picSegSizeX, picSegSizeY);
                     //put actual positions of segs into array:
                     positions[x][y].setActualPos(scaledSegSizeX*x, scaledSegSizeY*y);
                 }    
@@ -75,9 +75,9 @@ class puzzle extends Panel implements Runnable
             positions[blankIndexX][blankIndexY].correctsX = 0;
             positions[blankIndexX][blankIndexY].correctsY = 0;
             
-            ready = true; //ready for user to play puzzle
+            ready = true; //ready for user to play Puzzle
             //show();
-            jumbleSegs(1000);//jumble up puzzle before they start
+            jumbleSegs(1000);//jumble up Puzzle before they start
             timer.start();// start the clock
         }
         else

@@ -4,7 +4,7 @@ import java.awt.Toolkit.*;
 import java.awt.image.*;
 import java.util.*;
 
-class picSegment
+class PuzzleSegment
 {
     //int itsPosX, itsPosY;
     //int sourcePosX, sourcePosY;
@@ -13,7 +13,7 @@ class picSegment
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     
-    public picSegment(int posX, int posY, int width, int height)
+    public PuzzleSegment(int posX, int posY, int width, int height)
     {
         sX = posX;
         sY = posY;

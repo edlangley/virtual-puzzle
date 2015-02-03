@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class userImageRec
+class UserPicScoreFileRec
 {
     int picID = 0; //2 bytes
     String picSetID = "Empty"; //40 bytes + 2 for header

@@ -2,10 +2,10 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-class mainMenuDialog extends basicMenuDialog implements ActionListener
+class MainOptionsDialog extends BaseDialog implements ActionListener
 {
     //main menu
-    Button doPuzzle = new Button("Do a puzzle");
+    Button doPuzzle = new Button("Do a Puzzle");
     Button loadPics = new Button("Import Pictures");
     Button chooseDiff = new Button("Choose difficulty");
     Button quit = new Button("Quit");
@@ -19,19 +19,19 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
     Label diffLevel = new Label("6");
     
     //main record for user logged onto system, initialised in loadprogRec()
-    userProgRec mainProgRec;
+    UserProgressFileRec mainProgRec;
     
-    //menu global vars for the puzzle:
+    //menu global vars for the Puzzle:
 //        int numsegs, picOffsetX, picOffsetY, sizeLimit;
     
     // other menus controlled by main:
-//        nameMenuDialog nameMenu ;
-    VirtualPuzzle parentVPuzzle;
+//        ChooseUserDialog nameMenu ;
+    VirtualPuzzleApp parentVPuzzle;
     
-    public mainMenuDialog(VirtualPuzzle parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
+    public MainOptionsDialog(VirtualPuzzleApp parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
     {
         super(parent);
-//            nameMenu = new nameMenuDialog(parent, this, userProgFName);
+//            nameMenu = new ChooseUserDialog(parent, this, userProgFName);
         parentVPuzzle = parent;
         
         doPuzzle.addActionListener(this);
@@ -68,14 +68,14 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
 /*        
         public void loadPuzzle(String picFilePath)
         {
-        //    puzzle Puzzle1 = new puzzle(numsegs, int picOffsetX,
+        //    Puzzle Puzzle1 = new Puzzle(numsegs, int picOffsetX,
         //        int picOffsetY, int limit, String picFilePath, this);
-            puzzle Puzzle1 = new puzzle(numsegs, 0,
+            Puzzle Puzzle1 = new Puzzle(numsegs, 0,
                     0, 800, picFilePath, (Frame) this.getParent());
             hide();
         }
 */        
-    public void loadProgRec(userProgRec tempProgRec)
+    public void loadProgRec(UserProgressFileRec tempProgRec)
     {
         mainProgRec = tempProgRec;
         
@@ -86,21 +86,21 @@ class mainMenuDialog extends basicMenuDialog implements ActionListener
         Dialog winDialog = new Dialog((Frame) this.getParent(), "congratualtions!!", true);
         winDialog.setSize(300, 200);
         winDialog.setLayout(new FlowLayout());
-        winDialog.add(new Label("Well done, you won that puzzle in "+time+" seconds!"));
+        winDialog.add(new Label("Well done, you won that Puzzle in "+time+" seconds!"));
         winDialog.add(new Label("with "+numMoves+" moves"));
         winDialog.show();
     }
     
     public void actionPerformed(ActionEvent e)
     {
-        System.out.println("mainMenuDialog actionPerformed command: " + e.getActionCommand());
+        System.out.println("MainOptionsDialog actionPerformed command: " + e.getActionCommand());
         
         if(e.getActionCommand() == "Quit")
         {
             dispose();
             System.exit(0);
         }
-        else if(e.getActionCommand() == "Do a puzzle")
+        else if(e.getActionCommand() == "Do a Puzzle")
         {
             hide();
             parentVPuzzle.showPuzzleMenu();    

@@ -2,13 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class userProgRecFileHandler extends baseFileHandler
+class UserProgressFileHandler extends BaseFileHandler
 {// extends class containing string handling methods
     static long numRecs;
     static String filename;
-    static userProgRec progRec = new userProgRec();
+    static UserProgressFileRec progRec = new UserProgressFileRec();
     
-    public userProgRecFileHandler(String tempFileName) throws IOException
+    public UserProgressFileHandler(String tempFileName) throws IOException
     {
         // name of file passed down from global variable
         filename = tempFileName;
@@ -68,8 +68,8 @@ class userProgRecFileHandler extends baseFileHandler
         long position = number*progRec.length;
         rf.seek(position);
         progRec.pupilID = rf.readInt();
-        progRec.fName = baseFileHandler.rafReadString(rf);
-        progRec.lName = baseFileHandler.rafReadString(rf);
+        progRec.fName = BaseFileHandler.rafReadString(rf);
+        progRec.lName = BaseFileHandler.rafReadString(rf);
         progRec.points = rf.readInt();
         progRec.diffLevel = rf.readInt();
         progRec.numPuzzlesDone = rf.readInt();

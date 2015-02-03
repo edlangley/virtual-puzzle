@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class baseFileHandler
+class BaseFileHandler
 {// thse are the string handlers used by the other file handlers
     public static void rafWriteString(RandomAccessFile raf, String s,
         int fldSize)throws IOException

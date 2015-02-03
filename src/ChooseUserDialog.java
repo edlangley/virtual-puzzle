@@ -2,9 +2,9 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-class nameMenuDialog extends Dialog implements ActionListener
+class ChooseUserDialog extends Dialog implements ActionListener
 {
-    mainMenuDialog mainMenu;
+    MainOptionsDialog mainMenu;
     
     Button ok = new Button("OK");
     Button Cancel = new Button("Cancel");
@@ -15,13 +15,13 @@ class nameMenuDialog extends Dialog implements ActionListener
     Label lab2 = new Label("If this is your first time using this software");
     Label lab3 = new Label("click add.");
     //file handler:
-    userProgRecFileHandler userProgFile;
+    UserProgressFileHandler userProgFile;
     
-    public nameMenuDialog(Frame parent, mainMenuDialog main, String userProgFName) throws IOException
+    public ChooseUserDialog(Frame parent, MainOptionsDialog main, String userProgFName) throws IOException
     {
         super(parent);
         mainMenu = main;
-        userProgFile = new userProgRecFileHandler(userProgFName);
+        userProgFile = new UserProgressFileHandler(userProgFName);
         //list stuff
         for(int i = 0;i<userProgFile.numRecs;i++)
         {
