@@ -7,9 +7,7 @@ class BaseDialog extends Dialog
     Panel main = new Panel();
     Panel bottom = new Panel();
     
-    Button ok = new Button("OK");
-    Button cancel = new Button("Cancel");
-    Button back = new Button("Back to menu");
+    Button backButton = new Button("Back");
     
     public BaseDialog(Frame parent)
     {
@@ -27,6 +25,5 @@ class BaseDialog extends Dialog
         setModal(true);
         setResizable(false);
         setLayout(new BorderLayout());
-        
     }
 }

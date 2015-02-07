@@ -2,36 +2,13 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-/*
- * TODO:
- * Rename:
- * baseFileHandler -> BaseFileHandler
- * basicMenuDialog -> BaseDialog
- * chooseDifficultyDialog -> ChooseDifficultyDialog
- * doPuzzleDialog -> ChoosePuzzleDialog
- * loadPicsDialog -> LoadPicsDialog
- * mainMenuDialog -> MainOptionsDialog
- * nameMenuDialog -> ChooseUserDialog
- * picIndexRec -> PicFileRec
- * picIndexRecFileHandler -> PicFileHandler
- * picSegment -> PuzzleSegment
- * puzzle -> Puzzle
- * userImageRec -> UserPicScoreFileRec
- * userImageRecFileHandler -> UserPicScoreFileHandler
- * userProgRec -> UserProgressFileRec
- * userProgRecFileHandler -> UserProgressFileHandler
- * VirtualPuzzle -> VirtualPuzzleApp
- */
-
-
-
 class VirtualPuzzleApp extends Frame
     implements ActionListener, MouseListener, MouseMotionListener, KeyListener
 {
     // Hard coded for now:
     String userProgFName = "data/ed.user";
     String userImageRecFName = "None";
-    String picIndexFName = "None";
+    String picIndexFName = "data/puzzles.dat";
     
     int numsegs = 3;
     int picOffsetX = 10;
@@ -44,8 +21,9 @@ class VirtualPuzzleApp extends Frame
     Menu fileMenu = new Menu("File");
     
     Puzzle puzzle1;
-    MainOptionsDialog mainMenu;
-    ChoosePuzzleDialog puzzleDialog;
+    MainOptionsDialog mainDialog;
+    ChoosePuzzleDialog puzzleChooseDialog;
+    ManagePuzzlesDialog puzzlesManageDialog;
     
     public static void main(String args[]) throws IOException
     {
@@ -54,7 +32,7 @@ class VirtualPuzzleApp extends Frame
         mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
         
-        mainFrame.showMainMenu();
+        mainFrame.showMainDialog();
     }
     
     public VirtualPuzzleApp() throws IOException
@@ -81,8 +59,9 @@ class VirtualPuzzleApp extends Frame
         menuBar.add(fileMenu);
         setMenuBar(menuBar);
         
-        mainMenu = new MainOptionsDialog(this, userProgFName, userImageRecFName, picIndexFName);
-        puzzleDialog = new ChoosePuzzleDialog(this, userImageRecFName);
+        mainDialog = new MainOptionsDialog(this, userProgFName, userImageRecFName, picIndexFName);
+        puzzleChooseDialog = new ChoosePuzzleDialog(this, picIndexFName);
+        puzzlesManageDialog = new ManagePuzzlesDialog(this, picIndexFName);
         
         puzzle1 = new Puzzle(this);
         puzzle1.addMouseListener(this);
@@ -90,17 +69,22 @@ class VirtualPuzzleApp extends Frame
         add(puzzle1, BorderLayout.CENTER);
     }
     
-    public void showMainMenu()
+    public void showMainDialog()
     {
-        mainMenu.show();
+        mainDialog.show();
     }
     
-    public void showPuzzleMenu()
+    public void showChoosePuzzleDialog()
     {
-        //puzzleDialog.show();
+        puzzleChooseDialog.show();
         
         // For interim testing:
-        loadPuzzle(picFilePath);
+        //loadPuzzle(picFilePath);
+    }
+    
+    public void showLoadPicsDialog()
+    {
+        puzzlesManageDialog.show();
     }
     
     public void loadPuzzle(String picFilePath)
@@ -111,7 +95,7 @@ class VirtualPuzzleApp extends Frame
     
     public void showWinScreen(int time, int numMoves)
     {
-        mainMenu.showWinScreen(time, numMoves);
+        mainDialog.showWinScreen(time, numMoves);
     }
     
     public void actionPerformed(ActionEvent e)
@@ -120,7 +104,6 @@ class VirtualPuzzleApp extends Frame
 
     public void mouseClicked(MouseEvent e)
     {
-        //System.out.println("got to mouseclicked: x: "+e.getX()+" y: "+e.getY());
         if(puzzle1.ready)
         {
             puzzle1.findSegMouse(e.getX(),e.getY());
@@ -157,7 +140,6 @@ class VirtualPuzzleApp extends Frame
     
     public void keyPressed(KeyEvent e)
     {
-        //System.out.println("Key pressed");
         if(puzzle1.ready)
         {
             puzzle1.findSegKeyboard(e);

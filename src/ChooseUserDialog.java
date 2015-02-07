@@ -73,12 +73,12 @@ class ChooseUserDialog extends Dialog implements ActionListener
     
     public void actionPerformed(ActionEvent e)
     {        
-        if(e.getActionCommand() == "Cancel")
+        if(e.getActionCommand().equals("Cancel"))
         {
             dispose();
             System.exit(0);
         }
-        if(e.getActionCommand() == "OK")
+        if(e.getActionCommand().equals("OK"))
         {
             int recNum = nameList.getSelectedIndex();
             try {
