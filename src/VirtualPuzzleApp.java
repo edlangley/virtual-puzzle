@@ -5,10 +5,10 @@ import java.io.IOException;
 class VirtualPuzzleApp extends Frame
     implements ActionListener, MouseListener, MouseMotionListener, KeyListener
 {
+    String usersFName = "data/users.dat";
+    String puzzlesFName = "data/puzzles.dat";
     // Hard coded for now:
-    String userProgFName = "data/ed.user";
-    String userImageRecFName = "None";
-    String picIndexFName = "data/puzzles.dat";
+    String userScoresFName = "data/ed.user";
     
     int numsegs = 3;
     int picOffsetX = 10;
@@ -59,9 +59,9 @@ class VirtualPuzzleApp extends Frame
         menuBar.add(fileMenu);
         setMenuBar(menuBar);
         
-        mainDialog = new MainOptionsDialog(this, userProgFName, userImageRecFName, picIndexFName);
-        puzzleChooseDialog = new ChoosePuzzleDialog(this, picIndexFName);
-        puzzlesManageDialog = new ManagePuzzlesDialog(this, picIndexFName);
+        mainDialog = new MainOptionsDialog(this);
+        puzzleChooseDialog = new ChoosePuzzleDialog(this, puzzlesFName);
+        puzzlesManageDialog = new ManagePuzzlesDialog(this, puzzlesFName);
         
         puzzle1 = new Puzzle(this);
         puzzle1.addMouseListener(this);
@@ -76,6 +76,7 @@ class VirtualPuzzleApp extends Frame
     
     public void showChoosePuzzleDialog()
     {
+        puzzleChooseDialog.loadPuzzleList(puzzlesFName);
         puzzleChooseDialog.show();
         
         // For interim testing:

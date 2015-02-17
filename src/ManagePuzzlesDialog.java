@@ -14,9 +14,9 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
     
     EditPuzzleDialog editDialog;
     
-    PicFileHandler picIndex;
+    FileHandler puzzlesFileHandler;
 
-    public ManagePuzzlesDialog(VirtualPuzzleApp parent, String picRecordFileName) throws IOException
+    public ManagePuzzlesDialog(VirtualPuzzleApp parent, String puzzlesFileName) throws IOException
     {
         super(parent);
         parentVPuzzle = parent;
@@ -62,19 +62,41 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         editDialog = new EditPuzzleDialog(parent, this);
         
         
-        picIndex = new PicFileHandler(picRecordFileName);
-        for(int i = 0;i<picIndex.numRecs;i++)
+        puzzlesFileHandler = new FileHandler(puzzlesFileName);
+        for(int i = 0; i < puzzlesFileHandler.numRecords(); i++)
         {
-            picIndex.readRec(i);
-            puzzleList.addItem(picIndex.ImageRec.picName);
+            puzzleList.addItem(puzzlesFileHandler.readRec(i).picName);
         }
     }
-    
+
+    public void addNewPuzzle(PuzzlesFileRec newPuzzleRec)
+    {
+        puzzlesFileHandler.addRec(newPuzzleRec);
+        puzzleList.addItem(newPuzzleRec.picName);
+    }
+
+    public void updatePuzzle(int recIx, PuzzlesFileRec puzzleRec)
+    {
+        puzzlesFileHandler.updateRec(recIx, puzzleRec);
+        puzzleList.replaceItem(puzzleRec.picName, recIx);
+    }
+
     public void actionPerformed(ActionEvent e)
     {        
         if(e.getActionCommand().equals("Add"))
         {
             editDialog.show();
+        }
+        else if(e.getActionCommand().equals("Edit"))
+        {
+            // TODO: Set up button to be enabled only when a list item is selected
+            //System.err.println(puzzleList.getSelectedIndex());
+            
+            if(puzzleList.getSelectedIndex() >= 0)
+            {
+                editDialog.loadPuzzleRecord(puzzleList.getSelectedIndex(), puzzlesFileHandler.readRec(puzzleList.getSelectedIndex()));
+                editDialog.show();
+            }
         }
         else if(e.getActionCommand().equals("Back"))
         {

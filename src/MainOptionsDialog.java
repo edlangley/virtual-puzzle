@@ -9,7 +9,6 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
     Button doPuzzle = new Button("Do a Puzzle");
     Button loadPics = new Button("Manage Puzzles");
     Button quit = new Button("Quit");
-    Panel p1 = new Panel();
     
     Label lab1 = new Label("Hello .......... ");
     Label lab2 = new Label("Puzzles you have completed so far: ");
@@ -19,10 +18,10 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
     Label diffLevel = new Label("6");
     
     //main record for user logged onto system, initialised in loadprogRec()
-    UserProgressFileRec mainProgRec;
+    UsersFileRec userRec;
 
     
-    public MainOptionsDialog(VirtualPuzzleApp parent, String userProgFName, String userImageRecFName, String picIndexFName) throws IOException
+    public MainOptionsDialog(VirtualPuzzleApp parent) throws IOException
     {
         super(parent);
         parentVPuzzle = parent;
@@ -52,9 +51,9 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         
     }
 
-    public void loadProgRec(UserProgressFileRec tempProgRec)
+    public void loadProgRec(UsersFileRec tempUserRec)
     {
-        mainProgRec = tempProgRec;
+        userRec = tempUserRec;
         
     }
 

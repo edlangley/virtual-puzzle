@@ -15,20 +15,21 @@ class ChooseUserDialog extends Dialog implements ActionListener
     Label lab2 = new Label("If this is your first time using this software");
     Label lab3 = new Label("click add.");
     //file handler:
-    UserProgressFileHandler userProgFile;
+    //UsersFileHandler userProgFile;
     
     public ChooseUserDialog(Frame parent, MainOptionsDialog main, String userProgFName) throws IOException
     {
         super(parent);
         mainMenu = main;
-        userProgFile = new UserProgressFileHandler(userProgFName);
+        /*
+        userProgFile = new UsersFileHandler(userProgFName);
         //list stuff
         for(int i = 0;i<userProgFile.numRecs;i++)
         {
             userProgFile.readUserRec(i);
             nameList.add(userProgFile.progRec.fName+" "+userProgFile.progRec.lName);
         }
-        
+        */
         
         addWindowListener(new WindowAdapter()
             {
@@ -72,7 +73,7 @@ class ChooseUserDialog extends Dialog implements ActionListener
     }
     
     public void actionPerformed(ActionEvent e)
-    {        
+    {
         if(e.getActionCommand().equals("Cancel"))
         {
             dispose();
@@ -81,6 +82,7 @@ class ChooseUserDialog extends Dialog implements ActionListener
         if(e.getActionCommand().equals("OK"))
         {
             int recNum = nameList.getSelectedIndex();
+            /*
             try {
                 userProgFile.readUserRec(recNum);
             } catch (IOException e1) {
@@ -88,6 +90,7 @@ class ChooseUserDialog extends Dialog implements ActionListener
                 e1.printStackTrace();
             }
             mainMenu.loadProgRec(userProgFile.progRec);
-        }    
-    }        
+            */
+        }
+    }
 }

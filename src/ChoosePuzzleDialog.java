@@ -13,9 +13,9 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
     Label diffLevelLabel = new Label(diffLevelString);
     Button goButton = new Button("Go");
     
-    PicFileHandler picIndex;
+    FileHandler puzzlesFileHandler;
     
-    public ChoosePuzzleDialog(VirtualPuzzleApp parent, String picRecordFileName) throws IOException
+    public ChoosePuzzleDialog(VirtualPuzzleApp parent, String puzzlesFileName)
     {
         super(parent);
         parentVPuzzle = parent;
@@ -49,12 +49,21 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
         add(main,BorderLayout.CENTER);
         add(bottom,BorderLayout.SOUTH);
         
-        
-        picIndex = new PicFileHandler(picRecordFileName);
-        for(int i = 0;i<picIndex.numRecs;i++)
+        loadPuzzleList(puzzlesFileName);
+    }
+    
+    public void loadPuzzleList(String puzzlesFileName)
+    {
+        try {
+            puzzlesFileHandler = new FileHandler(puzzlesFileName);
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        puzzleList.clear();
+        for(int i = 0; i < puzzlesFileHandler.numRecords(); i++)
         {
-            picIndex.readRec(i);
-            puzzleList.addItem(picIndex.ImageRec.picName);
+            puzzleList.addItem(puzzlesFileHandler.readRec(i).picName);
         }
     }
     
@@ -62,25 +71,11 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
     {
         if(e.getActionCommand().equals("Go"))
         {
-/*
-            PicFileHandler picIndex = null;
-            try {
-                picIndex = new PicFileHandler(indexfilename);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-*/
-            int recNum = puzzleList.getSelectedIndex();
-            try {
-                picIndex.readRec(recNum);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            parentVPuzzle.loadPuzzle(picIndex.ImageRec.picFileName +
-                picIndex.ImageRec.picDirectory);
-        }        
+            int recIx = puzzleList.getSelectedIndex();
+            PuzzlesFileRec chosenPuzzle = puzzlesFileHandler.readRec(recIx);
+            parentVPuzzle.loadPuzzle(chosenPuzzle.picFileName);
+            hide();
+        }
         else if(e.getActionCommand().equals("Back"))
         {
             hide();

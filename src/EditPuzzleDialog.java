@@ -1,5 +1,6 @@
 import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.Dialog;
 import java.awt.FileDialog;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
@@ -18,16 +19,17 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
 {
     VirtualPuzzleApp parentVPuzzle;
     ManagePuzzlesDialog parentPuzzleManageDlg;
+    int currentRecIx;
+    
+    Label puzzleNameLabel = new Label("Puzzle Name:");
+    TextField puzzleNameText = new TextField(20);
     
     Label fileNameLabel = new Label("Image File:");
     TextField imageFileNamePathText = new TextField(30);
     Button browseButton = new Button("Browse...");
     
-    // Difficulty widets
-    //Panel horizPanel = new Panel();
     Label piecesHorizLabel = new Label("Number of horizontal pieces:");
     TextField piecesHorizText = new TextField(4);
-    //Panel vertPanel = new Panel();
     Label piecesVertLabel = new Label("Number of vertical pieces:");
     TextField piecesVertText = new TextField(4);
     
@@ -45,29 +47,40 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         okButton.addActionListener(this);
         cancelButton.addActionListener(this);
         
-        top.setLayout(new FlowLayout(FlowLayout.LEFT));
-        top.add(fileNameLabel);
-        top.add(imageFileNamePathText);
-        top.add(browseButton);
+        setSize(480, 300);
+        
+        // puzzle name
+        top.setLayout(new FlowLayout(FlowLayout.CENTER));
+        top.add(puzzleNameLabel);
+        top.add(puzzleNameText);
+        
+        // image file choose
+        Panel imageFilePanel = new Panel();
+        imageFilePanel.setLayout(new FlowLayout(FlowLayout.LEFT));
+        imageFilePanel.add(fileNameLabel);
+        imageFilePanel.add(imageFileNamePathText);
+        imageFilePanel.add(browseButton);
+        main.add(imageFilePanel);
         
         // num segments horizontal and vertical
-        //main.setLayout(new GridLayout(2,2));
-        
+        Panel puzzleSizePanel = new Panel();
         GridBagLayout gridbag = new GridBagLayout();
         GridBagConstraints constraints = new GridBagConstraints();
-        main.setLayout(gridbag);
+        puzzleSizePanel.setLayout(gridbag);
         
         constraints.insets = new Insets(5, 5, 5, 5);
         gridbag.setConstraints(piecesHorizLabel, constraints);
-        main.add(piecesHorizLabel);
+        puzzleSizePanel.add(piecesHorizLabel);
         constraints.gridwidth = GridBagConstraints.REMAINDER; //end row
         gridbag.setConstraints(piecesHorizText, constraints);
-        main.add(piecesHorizText);
+        puzzleSizePanel.add(piecesHorizText);
         constraints.gridwidth = 1;
         gridbag.setConstraints(piecesVertLabel, constraints);
-        main.add(piecesVertLabel);
+        puzzleSizePanel.add(piecesVertLabel);
         gridbag.setConstraints(piecesVertText, constraints);
-        main.add(piecesVertText);
+        puzzleSizePanel.add(piecesVertText);
+        
+        main.add(puzzleSizePanel);
         
         bottom.setLayout(new FlowLayout(FlowLayout.RIGHT));
         bottom.add(okButton);
@@ -76,6 +89,28 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         add(top,BorderLayout.NORTH);
         add(main,BorderLayout.CENTER);
         add(bottom,BorderLayout.SOUTH);
+        
+        currentRecIx = -1; // < 0 means add a new record
+    }
+    
+    public void clearForm()
+    {
+        currentRecIx = -1;
+        
+        puzzleNameText.setText("");
+        imageFileNamePathText.setText("");
+        piecesHorizText.setText("");
+        piecesVertText.setText("");
+    }
+
+    public void loadPuzzleRecord(int recIx, PuzzlesFileRec puzzleRec)
+    {
+        currentRecIx = recIx;
+        
+        puzzleNameText.setText(puzzleRec.picName);
+        imageFileNamePathText.setText(puzzleRec.picFileName);
+        piecesHorizText.setText(new Integer(puzzleRec.numSegmentsX).toString());
+        piecesVertText.setText(new Integer(puzzleRec.numSegmentsY).toString());
     }
 
     public void actionPerformed(ActionEvent e)
@@ -97,12 +132,69 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("OK"))
         {
+            PuzzlesFileRec newPuzzleRec = new PuzzlesFileRec();
+            newPuzzleRec.picName = puzzleNameText.getText();
+            newPuzzleRec.picFileName = imageFileNamePathText.getText();
+            
+            Integer numSegs;
+            try
+            {
+                numSegs = new Integer(piecesHorizText.getText());
+            }
+            catch(NumberFormatException numberFormatException)
+            {
+                showMessageDialog("Number of horizontal segments is not a number.");
+                return;
+            }
+            newPuzzleRec.numSegmentsX = numSegs.intValue();
+            
+            try
+            {
+                numSegs = new Integer(piecesVertText.getText());
+            }
+            catch(NumberFormatException numberFormatException)
+            {
+                showMessageDialog("Number of vertical segments is not a number.");
+                return;
+            }
+            newPuzzleRec.numSegmentsY = numSegs.intValue();
+            
             hide();
-            // parentPuzzleManageDlg.loadNewPuzzle or similar
+            if(currentRecIx == -1)
+            {
+                parentPuzzleManageDlg.addNewPuzzle(newPuzzleRec);
+            }
+            else
+            {
+                parentPuzzleManageDlg.updatePuzzle(currentRecIx, newPuzzleRec);
+            }
         }
         else if(e.getActionCommand().equals("Cancel"))
         {
             hide();
         }
+    }
+    
+    private void showMessageDialog(String message)
+    {
+        final Dialog messageDialog = new Dialog(this, "Alert", true);
+        
+        messageDialog.setLayout(new FlowLayout());
+
+        Button okButton = new Button ("OK");
+        okButton.addActionListener ( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent e )
+            {
+                // Hide dialog
+                messageDialog.setVisible(false);
+            }
+        });
+
+        messageDialog.add(new Label (message));
+        messageDialog.add(okButton);
+
+        messageDialog.pack();
+        messageDialog.setVisible(true);
     }
 }

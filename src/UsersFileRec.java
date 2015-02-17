@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.*;
 
-class UserProgressFileRec
+class UsersFileRec
 {
     int pupilID = 0; //2 bytes
     String fName = "Empty"; //40 bytes + 2 for header
