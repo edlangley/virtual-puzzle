@@ -13,7 +13,7 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
     Label diffLevelLabel = new Label(diffLevelString);
     Button goButton = new Button("Go");
     
-    FileHandler puzzlesFileHandler;
+    FileHandler<PuzzlesFileRec> puzzlesFileHandler;
     
     public ChoosePuzzleDialog(VirtualPuzzleApp parent, String puzzlesFileName)
     {

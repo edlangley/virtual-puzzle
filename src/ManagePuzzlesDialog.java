@@ -14,7 +14,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
     
     EditPuzzleDialog editDialog;
     
-    FileHandler puzzlesFileHandler;
+    FileHandler<PuzzlesFileRec> puzzlesFileHandler;
 
     public ManagePuzzlesDialog(VirtualPuzzleApp parent, String puzzlesFileName) throws IOException
     {

@@ -13,12 +13,10 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 
-// TODO: do this with PuzzlesFileRec first, change to collections interface afterwards
-
-public class FileHandler
+public class FileHandler<T>
 {
     private String fileName;
-    private List<PuzzlesFileRec> list = new ArrayList<>();
+    private List<T> list = new ArrayList<>();
     
     public FileHandler(String recFileName) throws IOException
     {
@@ -44,7 +42,7 @@ public class FileHandler
         {
             while(true)
             {
-                PuzzlesFileRec fRec = (PuzzlesFileRec) objInStream.readObject();
+                T fRec = (T) objInStream.readObject();
                 list.add(fRec);
             }
         }
@@ -74,20 +72,20 @@ public class FileHandler
         }
     }
     
-    public PuzzlesFileRec readRec(int recIx)
+    public T readRec(int recIx)
     {
-        return new PuzzlesFileRec(list.get(recIx));
+        return list.get(recIx);
     }
     
-    public void addRec(PuzzlesFileRec puzzleRec)
+    public void addRec(T rec)
     {
-        list.add(new PuzzlesFileRec(puzzleRec));
+        list.add(rec);
         outputToFile();
     }
     
-    public void updateRec(int recIx, PuzzlesFileRec puzzleRec)
+    public void updateRec(int recIx, T rec)
     {
-        list.set(recIx, new PuzzlesFileRec(puzzleRec));
+        list.set(recIx, rec);
         outputToFile();
     }
     
@@ -117,7 +115,7 @@ public class FileHandler
             {
                 Path path = FileSystems.getDefault().getPath(fileName);
                 fileOutStream = (FileOutputStream)Files.newOutputStream(path);
-                for(PuzzlesFileRec rec : list)
+                for(T rec : list)
                 {
                     objOutStream.writeObject(rec);
                 }
@@ -131,7 +129,7 @@ public class FileHandler
         try
         {
             objOutStream = new ObjectOutputStream(fileOutStream);
-            for(PuzzlesFileRec rec : list)
+            for(T rec : list)
             {
                 objOutStream.writeObject(rec);
             }
