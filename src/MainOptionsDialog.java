@@ -82,7 +82,7 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         else if(e.getActionCommand().equals("Manage Puzzles"))
         {
             hide();
-            parentVPuzzle.showLoadPicsDialog();
+            parentVPuzzle.showManagePuzzlesDialog();
         }
     }
 }

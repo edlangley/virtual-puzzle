@@ -2,95 +2,126 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-class ChooseUserDialog extends Dialog implements ActionListener
+import javax.swing.BoxLayout;
+
+class ChooseUserDialog extends BaseDialog implements ActionListener
 {
-    MainOptionsDialog mainMenu;
+    VirtualPuzzleApp parentVPuzzle;
+
+    Label topLabel1 = new Label("Pick Your name from the list\nnext line");
+    Label topLabel2 = new Label("If this is your first time using this software");
+    Label topLabel3 = new Label("click add.");
+    Button addButton = new Button("Add");
+    Button deleteButton = new Button("Delete");
     
-    Button ok = new Button("OK");
-    Button Cancel = new Button("Cancel");
-    Button Add = new Button("Add");
+    Button okButton = new Button("OK");
+    Button quitButton = new Button("Quit");
     
     List nameList = new List();
-    Label lab1 = new Label("Pick Your name from the list:");
-    Label lab2 = new Label("If this is your first time using this software");
-    Label lab3 = new Label("click add.");
-    //file handler:
-    //UsersFileHandler userProgFile;
     
-    public ChooseUserDialog(Frame parent, MainOptionsDialog main, String userProgFName) throws IOException
+    EditUserDialog editDialog;
+    
+    FileHandler<UsersFileRec> usersFileHandler;
+    
+    public ChooseUserDialog(VirtualPuzzleApp parent, String usersFName) throws IOException
     {
         super(parent);
-        mainMenu = main;
-        /*
-        userProgFile = new UsersFileHandler(userProgFName);
-        //list stuff
-        for(int i = 0;i<userProgFile.numRecs;i++)
-        {
-            userProgFile.readUserRec(i);
-            nameList.add(userProgFile.progRec.fName+" "+userProgFile.progRec.lName);
-        }
-        */
-        
-        addWindowListener(new WindowAdapter()
-            {
-                public void windowClosing(WindowEvent e)
-                {
-                    dispose();
-                
-                }
-            });
-        setSize(300,383);
+        parentVPuzzle = parent;
+
+        setSize(300, 384);
         setTitle("Welcome - choose your name");
-        setModal(true);
-        setResizable(false);
+        addButton.addActionListener(this);
+        deleteButton.addActionListener(this);
+        okButton.addActionListener(this);
+        quitButton.addActionListener(this);
         
-        setLayout(null);
-        lab1.setBounds(20,30,300,15);
-        lab2.setBounds(20,50,300,15);
-        lab3.setBounds(20,65,300,10);
-//        lst.setBounds(20,85,260,250);
+        Panel topPanel = new Panel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.add(topLabel1);
+        topPanel.add(topLabel2);
+        topPanel.add(topLabel3);
+        top.add(topPanel);
+        //top.add(topLabel1);
         
+        GridBagLayout gridbag = new GridBagLayout();
+        GridBagConstraints constraints = new GridBagConstraints();
+        main.setLayout(gridbag);
         
-        ok.setBounds(54,345,72,23);
-        ok.addActionListener(this);
+        constraints.insets = new Insets(5, 5, 5, 5);
+        constraints.fill = GridBagConstraints.BOTH;
+        constraints.gridheight = 4;
+        constraints.weightx = 1.0;
+        constraints.weighty = 1.0;
+        gridbag.setConstraints(nameList, constraints);
+        main.add(nameList);
         
-        Add.setBounds(131,345,72,23);
-        Add.addActionListener(this);
+        constraints.weightx = 0.0;
+        constraints.weighty = 0.0;
+        constraints.gridwidth = GridBagConstraints.REMAINDER; //end row
+        constraints.gridheight = 1;
+        gridbag.setConstraints(addButton, constraints);
+        main.add(addButton);
+        gridbag.setConstraints(deleteButton, constraints);
+        main.add(deleteButton);
         
-        Cancel.setBounds(208,345,72,23);
-        Cancel.addActionListener(this);
+        bottom.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        bottom.add(okButton);
+        bottom.add(quitButton);
         
-        add(lab1);
-        add(lab2);
-        add(lab3);
-//        add(lst);
-        add(ok);
-        add(Add);
-        add(Cancel);
+        add(top,BorderLayout.NORTH);
+        add(main,BorderLayout.CENTER);
+        add(bottom,BorderLayout.SOUTH);
         
-        //add(upper, "Center");
-        //add(lower,"South");
+        editDialog = new EditUserDialog(parent, this);
+        
+        usersFileHandler = new FileHandler(usersFName);
+        for(int i = 0; i < usersFileHandler.numRecords(); i++)
+        {
+            nameList.add(usersFileHandler.readRec(i).fName + " " + usersFileHandler.readRec(i).lName);
+        }
+    }
+
+    public void addNewUser(UsersFileRec newUserRec)
+    {
+        usersFileHandler.addRec(newUserRec);
+        nameList.addItem(newUserRec.fName + " " + newUserRec.lName);
     }
     
     public void actionPerformed(ActionEvent e)
     {
-        if(e.getActionCommand().equals("Cancel"))
+        if(e.getActionCommand().equals("Add"))
+        {
+            editDialog.show();
+        }
+        else if(e.getActionCommand().equals("Delete"))
+        {
+            // TODO: disable Delete until user selected
+            
+            int recNum = nameList.getSelectedIndex();
+            
+            if(nameList.getSelectedIndex() >= 0)
+            {
+                nameList.remove(recNum);
+                usersFileHandler.removeRec(recNum);
+            }
+        }
+        else if(e.getActionCommand().equals("OK"))
+        {
+            // TODO: disable OK until user selected
+            
+            int recNum = nameList.getSelectedIndex();
+            
+            if(nameList.getSelectedIndex() >= 0)
+            {
+                parentVPuzzle.loadUser(usersFileHandler.readRec(nameList.getSelectedIndex()));
+                hide();
+                parentVPuzzle.showMainDialog();
+            }
+        }
+        else if(e.getActionCommand().equals("Quit"))
         {
             dispose();
             System.exit(0);
-        }
-        if(e.getActionCommand().equals("OK"))
-        {
-            int recNum = nameList.getSelectedIndex();
-            /*
-            try {
-                userProgFile.readUserRec(recNum);
-            } catch (IOException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
-            }
-            mainMenu.loadProgRec(userProgFile.progRec);
-            */
         }
     }
 }

@@ -8,7 +8,9 @@ class VirtualPuzzleApp extends Frame
     String usersFName = "data/users.dat";
     String puzzlesFName = "data/puzzles.dat";
     // Hard coded for now:
-    String userScoresFName = "data/ed.user";
+    //String userScoresFName = "data/ed.user";
+    
+    UsersFileRec currentUserRec = null;
     
     int numsegs = 3;
     int picOffsetX = 10;
@@ -21,6 +23,7 @@ class VirtualPuzzleApp extends Frame
     Menu fileMenu = new Menu("File");
     
     Puzzle puzzle1;
+    ChooseUserDialog userChooseDialog;
     MainOptionsDialog mainDialog;
     ChoosePuzzleDialog puzzleChooseDialog;
     ManagePuzzlesDialog puzzlesManageDialog;
@@ -32,7 +35,7 @@ class VirtualPuzzleApp extends Frame
         mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
         
-        mainFrame.showMainDialog();
+        mainFrame.showChooseUserDialog();
     }
     
     public VirtualPuzzleApp() throws IOException
@@ -59,6 +62,7 @@ class VirtualPuzzleApp extends Frame
         menuBar.add(fileMenu);
         setMenuBar(menuBar);
         
+        userChooseDialog = new ChooseUserDialog(this, usersFName);
         mainDialog = new MainOptionsDialog(this);
         puzzleChooseDialog = new ChoosePuzzleDialog(this, puzzlesFName);
         puzzlesManageDialog = new ManagePuzzlesDialog(this, puzzlesFName);
@@ -67,6 +71,11 @@ class VirtualPuzzleApp extends Frame
         puzzle1.addMouseListener(this);
         puzzle1.addKeyListener(this);
         add(puzzle1, BorderLayout.CENTER);
+    }
+    
+    public void showChooseUserDialog()
+    {
+        userChooseDialog.show();
     }
     
     public void showMainDialog()
@@ -78,14 +87,21 @@ class VirtualPuzzleApp extends Frame
     {
         puzzleChooseDialog.loadPuzzleList(puzzlesFName);
         puzzleChooseDialog.show();
-        
-        // For interim testing:
-        //loadPuzzle(picFilePath);
     }
     
-    public void showLoadPicsDialog()
+    public void showManagePuzzlesDialog()
     {
         puzzlesManageDialog.show();
+    }
+    
+    public void showWinScreen(int time, int numMoves)
+    {
+        mainDialog.showWinScreen(time, numMoves);
+    }
+    
+    public void loadUser(UsersFileRec userRec)
+    {
+        currentUserRec = userRec;
     }
     
     public void loadPuzzle(String picFilePath)
@@ -94,10 +110,6 @@ class VirtualPuzzleApp extends Frame
                 picOffsetY, maxPuzzleScaledDimensionPx);
     }
     
-    public void showWinScreen(int time, int numMoves)
-    {
-        mainDialog.showWinScreen(time, numMoves);
-    }
     
     public void actionPerformed(ActionEvent e)
     {

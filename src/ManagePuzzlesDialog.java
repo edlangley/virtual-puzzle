@@ -22,6 +22,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         parentVPuzzle = parent;
         
         setSize(400, 400);
+        setTitle("Manage Puzzles");
         addButton.addActionListener(this);
         editButton.addActionListener(this);
         deleteButton.addActionListener(this);
