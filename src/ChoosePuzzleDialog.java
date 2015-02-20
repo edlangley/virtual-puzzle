@@ -63,7 +63,7 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
         puzzleList.clear();
         for(int i = 0; i < puzzlesFileHandler.numRecords(); i++)
         {
-            puzzleList.addItem(puzzlesFileHandler.readRec(i).picName);
+            puzzleList.addItem(puzzlesFileHandler.readRec(i).puzzleName);
         }
     }
     
@@ -73,7 +73,7 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
         {
             int recIx = puzzleList.getSelectedIndex();
             PuzzlesFileRec chosenPuzzle = puzzlesFileHandler.readRec(recIx);
-            parentVPuzzle.loadPuzzle(chosenPuzzle.picFileName);
+            parentVPuzzle.loadPuzzle(chosenPuzzle.imgFileName);
             hide();
         }
         else if(e.getActionCommand().equals("Back"))

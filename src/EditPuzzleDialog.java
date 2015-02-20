@@ -107,8 +107,8 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
     {
         currentRecIx = recIx;
         
-        puzzleNameText.setText(puzzleRec.picName);
-        imageFileNamePathText.setText(puzzleRec.picFileName);
+        puzzleNameText.setText(puzzleRec.puzzleName);
+        imageFileNamePathText.setText(puzzleRec.imgFileName);
         piecesHorizText.setText(new Integer(puzzleRec.numSegmentsX).toString());
         piecesVertText.setText(new Integer(puzzleRec.numSegmentsY).toString());
     }
@@ -133,8 +133,8 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         else if(e.getActionCommand().equals("OK"))
         {
             PuzzlesFileRec newPuzzleRec = new PuzzlesFileRec();
-            newPuzzleRec.picName = puzzleNameText.getText();
-            newPuzzleRec.picFileName = imageFileNamePathText.getText();
+            newPuzzleRec.puzzleName = puzzleNameText.getText();
+            newPuzzleRec.imgFileName = imageFileNamePathText.getText();
             
             Integer numSegs;
             try

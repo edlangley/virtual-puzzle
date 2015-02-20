@@ -7,17 +7,14 @@ class VirtualPuzzleApp extends Frame
 {
     String usersFName = "data/users.dat";
     String puzzlesFName = "data/puzzles.dat";
-    // Hard coded for now:
-    //String userScoresFName = "data/ed.user";
     
     UsersFileRec currentUserRec = null;
     
+ // Hard coded for now:
     int numsegs = 3;
     int picOffsetX = 10;
     int picOffsetY = 10;
     int maxPuzzleScaledDimensionPx = 800;
-    String picFilePath = "data/the_park.jpg";
-    //String picFilePath = "data/Testpic2.jpg";
     
     MenuBar menuBar = new MenuBar();
     Menu fileMenu = new Menu("File");
@@ -104,9 +101,9 @@ class VirtualPuzzleApp extends Frame
         currentUserRec = userRec;
     }
     
-    public void loadPuzzle(String picFilePath)
+    public void loadPuzzle(String imgFilePath)
     {
-        puzzle1.load(picFilePath, numsegs, picOffsetX,
+        puzzle1.load(imgFilePath, numsegs, picOffsetX,
                 picOffsetY, maxPuzzleScaledDimensionPx);
     }
     

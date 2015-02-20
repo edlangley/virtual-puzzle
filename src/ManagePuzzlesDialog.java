@@ -66,20 +66,20 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         puzzlesFileHandler = new FileHandler(puzzlesFileName);
         for(int i = 0; i < puzzlesFileHandler.numRecords(); i++)
         {
-            puzzleList.addItem(puzzlesFileHandler.readRec(i).picName);
+            puzzleList.addItem(puzzlesFileHandler.readRec(i).puzzleName);
         }
     }
 
     public void addNewPuzzle(PuzzlesFileRec newPuzzleRec)
     {
         puzzlesFileHandler.addRec(newPuzzleRec);
-        puzzleList.addItem(newPuzzleRec.picName);
+        puzzleList.addItem(newPuzzleRec.puzzleName);
     }
 
     public void updatePuzzle(int recIx, PuzzlesFileRec puzzleRec)
     {
         puzzlesFileHandler.updateRec(recIx, puzzleRec);
-        puzzleList.replaceItem(puzzleRec.picName, recIx);
+        puzzleList.replaceItem(puzzleRec.puzzleName, recIx);
     }
 
     public void actionPerformed(ActionEvent e)
