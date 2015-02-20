@@ -6,16 +6,17 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
 {
     VirtualPuzzleApp parentVPuzzle;
 
-    Button doPuzzle = new Button("Do a Puzzle");
-    Button loadPics = new Button("Manage Puzzles");
-    Button quit = new Button("Quit");
+    Button doPuzzleButton = new Button("Do a Puzzle");
+    Button managePuzzlesButton = new Button("Manage Puzzles");
+    Button changeUserButton = new Button("Change User");
+    Button quitButton = new Button("Quit");
     
-    Label lab1 = new Label("Hello .......... ");
-    Label lab2 = new Label("Puzzles you have completed so far: ");
-    Label lab3 = new Label("You are on difficulty level: ");
+    Label helloLabel = new Label("Hello .......... ");
+    Label puzzCompTextLabel = new Label("Puzzles you have completed so far: ");
+    Label diffLvlTextLabel = new Label("You are on difficulty level: ");
     
-    Label puzzlesComp = new Label("5");
-    Label diffLevel = new Label("6");
+    Label puzzCompValueLabel = new Label("5");
+    Label diffLvlValueLabel = new Label("6");
     
     //main record for user logged onto system, initialised in loadprogRec()
     UsersFileRec userRec;
@@ -26,24 +27,26 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         super(parent);
         parentVPuzzle = parent;
         
-        doPuzzle.addActionListener(this);
-        loadPics.addActionListener(this);
-        quit.addActionListener(this);
+        doPuzzleButton.addActionListener(this);
+        managePuzzlesButton.addActionListener(this);
+        changeUserButton.addActionListener(this);
+        quitButton.addActionListener(this);
         
-        top.add(lab1);
+        top.add(helloLabel);
         
         GridLayout mainGrid = new GridLayout(3,2);
         mainGrid.setVgap(20);
         main.setLayout(mainGrid);
-        main.add(lab2);
-        main.add(puzzlesComp);
-        main.add(lab3);
-        main.add(diffLevel);
+        main.add(puzzCompTextLabel);
+        main.add(puzzCompValueLabel);
+        main.add(diffLvlTextLabel);
+        main.add(diffLvlValueLabel);
 
         bottom.setLayout(new FlowLayout());
-        bottom.add(doPuzzle);
-        bottom.add(loadPics);
-        bottom.add(quit);
+        bottom.add(doPuzzleButton);
+        bottom.add(managePuzzlesButton);
+        bottom.add(changeUserButton);
+        bottom.add(quitButton);
         
         add(top,BorderLayout.NORTH);
         add(main,BorderLayout.CENTER);
@@ -51,7 +54,7 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         
     }
 
-    public void loadProgRec(UsersFileRec tempUserRec)
+    public void loadUserRec(UsersFileRec tempUserRec)
     {
         userRec = tempUserRec;
         
@@ -69,12 +72,7 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
 
     public void actionPerformed(ActionEvent e)
     {
-        if(e.getActionCommand().equals("Quit"))
-        {
-            dispose();
-            System.exit(0);
-        }
-        else if(e.getActionCommand().equals("Do a Puzzle"))
+        if(e.getActionCommand().equals("Do a Puzzle"))
         {
             hide();
             parentVPuzzle.showChoosePuzzleDialog();
@@ -83,6 +81,16 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         {
             hide();
             parentVPuzzle.showManagePuzzlesDialog();
+        }
+        else if(e.getActionCommand().equals("Change User"))
+        {
+            hide();
+            parentVPuzzle.showChooseUserDialog();
+        }
+        else if(e.getActionCommand().equals("Quit"))
+        {
+            dispose();
+            System.exit(0);
         }
     }
 }
