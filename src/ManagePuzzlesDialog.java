@@ -86,6 +86,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
     {        
         if(e.getActionCommand().equals("Add"))
         {
+            editDialog.clearForm();
             editDialog.show();
         }
         else if(e.getActionCommand().equals("Edit"))
