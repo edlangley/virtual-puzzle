@@ -100,6 +100,16 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
                 editDialog.show();
             }
         }
+        else if(e.getActionCommand().equals("Delete"))
+        {
+            // TODO: Set up button to be enabled only when a list item is selected
+            
+            if(puzzleList.getSelectedIndex() >= 0)
+            {
+                puzzlesFileHandler.removeRec(puzzleList.getSelectedIndex());
+                puzzleList.remove(puzzleList.getSelectedIndex());
+            }
+        }
         else if(e.getActionCommand().equals("Back"))
         {
             hide();
