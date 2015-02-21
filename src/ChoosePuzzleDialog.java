@@ -54,13 +54,9 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
     
     public void loadPuzzleList(String puzzlesFileName)
     {
-        try {
-            puzzlesFileHandler = new FileHandler(puzzlesFileName);
-        } catch (IOException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        puzzlesFileHandler = new FileHandler(puzzlesFileName);
         puzzleList.clear();
+        
         for(int i = 0; i < puzzlesFileHandler.numRecords(); i++)
         {
             puzzleList.addItem(puzzlesFileHandler.readRec(i).puzzleName);

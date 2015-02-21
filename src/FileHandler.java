@@ -18,7 +18,7 @@ public class FileHandler<T>
     private String fileName;
     private List<T> list = new ArrayList<>();
     
-    public FileHandler(String recFileName) throws IOException
+    public FileHandler(String recFileName)
     {
         fileName = new String(recFileName);
         ObjectInputStream objInStream = null;
