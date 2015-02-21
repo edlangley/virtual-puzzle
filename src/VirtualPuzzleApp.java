@@ -99,6 +99,7 @@ class VirtualPuzzleApp extends Frame
     public void loadUser(UsersFileRec userRec)
     {
         currentUserRec = userRec;
+        mainDialog.loadUserRec(currentUserRec);
     }
     
     public void loadPuzzle(String imgFilePath)

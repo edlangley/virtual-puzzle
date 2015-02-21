@@ -58,6 +58,9 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
     {
         userRec = tempUserRec;
         
+        helloLabel.setText("Hello " + userRec.fName + " " + userRec.lName);
+        puzzCompValueLabel.setText(new Integer(userRec.numPuzzlesDone).toString());
+        diffLvlValueLabel.setText(new Integer(userRec.diffLevel).toString());
     }
 
     public void showWinScreen(int time, int numMoves)
