@@ -102,10 +102,12 @@ class VirtualPuzzleApp extends Frame
         mainDialog.loadUserRec(currentUserRec);
     }
     
-    public void loadPuzzle(String imgFilePath)
+    public void loadPuzzle(PuzzlesFileRec puzzleRec)
     {
-        puzzle1.load(imgFilePath, numsegs, picOffsetX,
-                picOffsetY, maxPuzzleScaledDimensionPx);
+        puzzle1.load(puzzleRec.imgFileName,
+                     puzzleRec.numSegmentsX, puzzleRec.numSegmentsY,
+                     picOffsetX, picOffsetY,
+                     maxPuzzleScaledDimensionPx);
     }
     
     

@@ -9,7 +9,7 @@ class Puzzle extends Panel implements Runnable
     VirtualPuzzleApp parentVPuzzle;
     
 
-    private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY, numsegsWanted; // passed in
+    private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY; // passed in
     private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY; // calculated
     private int scaledSegSizeX, scaledSegSizeY;
 
@@ -39,9 +39,8 @@ class Puzzle extends Panel implements Runnable
         parentVPuzzle = parent;
     }
     
-    public boolean load(String picName, int numsegs, int picOffsetX, int picOffsetY, int limit)
+    public boolean load(String picName, int numSegsX, int numSegsY, int picOffsetX, int picOffsetY, int limit)
     {
-        numsegsWanted = numsegs;
         offSetX = picOffsetX;
         offSetY = picOffsetY;
         puzzleWidthLimit = limit;
@@ -53,7 +52,10 @@ class Puzzle extends Panel implements Runnable
         loaded = loadImage(picName);
         if(loaded)
         {
-            setNumSegs(mainPic);//set segsizes of actual image
+            this.numSegsX = numSegsX;
+            picSegSizeX = (mainPic.getWidth(this) / numSegsX);
+            this.numSegsY = numSegsY;
+            picSegSizeY = (mainPic.getHeight(this) / numSegsY);
             
             positions = new PuzzleSegment[numSegsX][numSegsY];//Create the PuzzleSegment array
             scaleImage(mainPic);// set scaled segsizes for Puzzle
@@ -187,37 +189,6 @@ class Puzzle extends Panel implements Runnable
         else
             return(true);
 
-    }
-
-    private void setNumSegs(Image tempPic)//calculate no. of segs in picture:
-    {//modifies numsegsX, numsegsY, picSegSizeX, picSegSizeY
-                    
-        int height = tempPic.getHeight(this);
-        int width = tempPic.getWidth(this);
-
-        System.out.println("In setnumsegs, picsizes:"+width+"*"+height);
-
-        if (height > width)
-            {
-                numSegsX = numsegsWanted;              //calculate no. of segs down
-                picSegSizeX = (width/numsegsWanted);//based on numSegs across
-                numSegsY = (height/picSegSizeX);
-                picSegSizeY = (height/numSegsY);
-            }
-            else if (height < width)
-            {
-                numSegsY = numsegsWanted;            // do it other way round
-                picSegSizeY = (height/numsegsWanted);
-                numSegsX = (width/picSegSizeY);
-                picSegSizeX = (width/numSegsX);
-            }
-            else if (height == width)
-            {
-                numSegsX = numsegsWanted;
-                numSegsY = numsegsWanted;
-                picSegSizeX = (width/numsegsWanted);
-                picSegSizeY = picSegSizeX;
-            }
     }
 
     private void scaleImage(Image pic1)
