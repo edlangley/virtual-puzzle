@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import javax.swing.BoxLayout;
 
-class ChooseUserDialog extends BaseDialog implements ActionListener
+class ChooseUserDialog extends BaseDialog implements ActionListener, ItemListener
 {
     VirtualPuzzleApp parentVPuzzle;
 
@@ -34,6 +34,7 @@ class ChooseUserDialog extends BaseDialog implements ActionListener
         deleteButton.addActionListener(this);
         okButton.addActionListener(this);
         quitButton.addActionListener(this);
+        nameList.addItemListener(this);
         
         Panel topPanel = new Panel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
@@ -79,6 +80,10 @@ class ChooseUserDialog extends BaseDialog implements ActionListener
         {
             nameList.add(usersFileHandler.readRec(i).fName + " " + usersFileHandler.readRec(i).lName);
         }
+        
+        // Nothing in list selected initially
+        deleteButton.disable();
+        okButton.disable();
     }
 
     public void addNewUser(UsersFileRec newUserRec)
@@ -95,8 +100,6 @@ class ChooseUserDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("Delete"))
         {
-            // TODO: disable Delete until user selected
-            
             int recNum = nameList.getSelectedIndex();
             
             if(nameList.getSelectedIndex() >= 0)
@@ -107,8 +110,6 @@ class ChooseUserDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("OK"))
         {
-            // TODO: disable OK until user selected
-            
             int recNum = nameList.getSelectedIndex();
             
             if(nameList.getSelectedIndex() >= 0)
@@ -122,6 +123,20 @@ class ChooseUserDialog extends BaseDialog implements ActionListener
         {
             dispose();
             System.exit(0);
+        }
+    }
+    
+    public void itemStateChanged(ItemEvent e)
+    {
+        if(nameList.getSelectedIndex() == -1)
+        {
+            deleteButton.disable();
+            okButton.disable();
+        }
+        else
+        {
+            deleteButton.enable();
+            okButton.enable();
         }
     }
 }

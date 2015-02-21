@@ -2,7 +2,7 @@ import java.awt.*;
 import java.awt.event.*;
 import java.io.IOException;
 
-class ManagePuzzlesDialog extends BaseDialog implements ActionListener
+class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemListener
 {
     VirtualPuzzleApp parentVPuzzle;
     
@@ -27,6 +27,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         editButton.addActionListener(this);
         deleteButton.addActionListener(this);
         backButton.addActionListener(this);
+        puzzleList.addItemListener(this);
         
         top.add(topLabel);
         
@@ -68,6 +69,10 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         {
             puzzleList.addItem(puzzlesFileHandler.readRec(i).puzzleName);
         }
+        
+        // Nothing in list selected initially
+        editButton.disable();
+        deleteButton.disable();
     }
 
     public void addNewPuzzle(PuzzlesFileRec newPuzzleRec)
@@ -91,9 +96,6 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("Edit"))
         {
-            // TODO: Set up button to be enabled only when a list item is selected
-            //System.err.println(puzzleList.getSelectedIndex());
-            
             if(puzzleList.getSelectedIndex() >= 0)
             {
                 editDialog.loadPuzzleRecord(puzzleList.getSelectedIndex(), puzzlesFileHandler.readRec(puzzleList.getSelectedIndex()));
@@ -102,8 +104,6 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("Delete"))
         {
-            // TODO: Set up button to be enabled only when a list item is selected
-            
             if(puzzleList.getSelectedIndex() >= 0)
             {
                 puzzlesFileHandler.removeRec(puzzleList.getSelectedIndex());
@@ -114,6 +114,20 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener
         {
             hide();
             parentVPuzzle.showMainDialog();
+        }
+    }
+    
+    public void itemStateChanged(ItemEvent e)
+    {
+        if(puzzleList.getSelectedIndex() == -1)
+        {
+            editButton.disable();
+            deleteButton.disable();
+        }
+        else
+        {
+            editButton.enable();
+            deleteButton.enable();
         }
     }
 }
