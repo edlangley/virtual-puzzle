@@ -73,8 +73,10 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener
         {
             int recIx = puzzleList.getSelectedIndex();
             PuzzlesFileRec chosenPuzzleRec = puzzlesFileHandler.readRec(recIx);
-            parentVPuzzle.loadPuzzle(chosenPuzzleRec);
-            hide();
+            if(parentVPuzzle.loadPuzzle(chosenPuzzleRec) == true)
+            {
+                hide();
+            }
         }
         else if(e.getActionCommand().equals("Back"))
         {

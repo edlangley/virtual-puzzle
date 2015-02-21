@@ -102,12 +102,41 @@ class VirtualPuzzleApp extends Frame
         mainDialog.loadUserRec(currentUserRec);
     }
     
-    public void loadPuzzle(PuzzlesFileRec puzzleRec)
+    public boolean loadPuzzle(PuzzlesFileRec puzzleRec)
     {
-        puzzle1.load(puzzleRec.imgFileName,
-                     puzzleRec.numSegmentsX, puzzleRec.numSegmentsY,
-                     picOffsetX, picOffsetY,
-                     maxPuzzleScaledDimensionPx);
+        if(puzzle1.load(puzzleRec.imgFileName,
+                        puzzleRec.numSegmentsX, puzzleRec.numSegmentsY,
+                        picOffsetX, picOffsetY,
+                        maxPuzzleScaledDimensionPx) == false)
+        {
+            showMessageDialog("Unable to load puzzle image file " + puzzleRec.imgFileName);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public void showMessageDialog(String message)
+    {
+        final Dialog messageDialog = new Dialog(this, "Alert", true);
+        
+        messageDialog.setLayout(new FlowLayout());
+
+        Button okButton = new Button ("OK");
+        okButton.addActionListener ( new ActionListener()
+        {
+            public void actionPerformed( ActionEvent e )
+            {
+                // Hide dialog
+                messageDialog.setVisible(false);
+            }
+        });
+
+        messageDialog.add(new Label (message));
+        messageDialog.add(okButton);
+
+        messageDialog.pack();
+        messageDialog.setVisible(true);
     }
     
     

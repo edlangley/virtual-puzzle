@@ -143,7 +143,7 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
             }
             catch(NumberFormatException numberFormatException)
             {
-                showMessageDialog("Number of horizontal segments is not a number.");
+                parentVPuzzle.showMessageDialog("Number of horizontal segments is not a number.");
                 return;
             }
             newPuzzleRec.numSegmentsX = numSegs.intValue();
@@ -154,7 +154,7 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
             }
             catch(NumberFormatException numberFormatException)
             {
-                showMessageDialog("Number of vertical segments is not a number.");
+                parentVPuzzle.showMessageDialog("Number of vertical segments is not a number.");
                 return;
             }
             newPuzzleRec.numSegmentsY = numSegs.intValue();
@@ -173,28 +173,5 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         {
             hide();
         }
-    }
-    
-    private void showMessageDialog(String message)
-    {
-        final Dialog messageDialog = new Dialog(this, "Alert", true);
-        
-        messageDialog.setLayout(new FlowLayout());
-
-        Button okButton = new Button ("OK");
-        okButton.addActionListener ( new ActionListener()
-        {
-            public void actionPerformed( ActionEvent e )
-            {
-                // Hide dialog
-                messageDialog.setVisible(false);
-            }
-        });
-
-        messageDialog.add(new Label (message));
-        messageDialog.add(okButton);
-
-        messageDialog.pack();
-        messageDialog.setVisible(true);
     }
 }
