@@ -129,7 +129,10 @@ class Puzzle extends Panel implements Runnable
                         scaledSegSizeX,scaledSegSizeY);
         }
         if(won)
+        {
+            parentVPuzzle.updateUserScore(timeElapsed, numMovesMade);
             parentVPuzzle.showWinScreen(timeElapsed, numMovesMade);
+        }
     }  
     
     public void findSegKeyboard(KeyEvent e)

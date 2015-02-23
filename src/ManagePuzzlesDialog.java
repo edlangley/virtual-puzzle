@@ -5,6 +5,7 @@ import java.io.IOException;
 class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemListener
 {
     VirtualPuzzleApp parentVPuzzle;
+    String selectedPuzzleName = null;
     
     Label topLabel = new Label("Manage puzzles");
     Button addButton = new Button("Add");
@@ -85,6 +86,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemList
     {
         puzzlesFileHandler.updateRec(recIx, puzzleRec);
         puzzleList.replaceItem(puzzleRec.puzzleName, recIx);
+        parentVPuzzle.updateScoreRecords(selectedPuzzleName, puzzleRec);
     }
 
     public void actionPerformed(ActionEvent e)
@@ -108,6 +110,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemList
             {
                 puzzlesFileHandler.removeRec(puzzleList.getSelectedIndex());
                 puzzleList.remove(puzzleList.getSelectedIndex());
+                parentVPuzzle.removeUnneededScoreRecords(selectedPuzzleName);
             }
         }
         else if(e.getActionCommand().equals("Back"))
@@ -126,6 +129,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemList
         }
         else
         {
+            selectedPuzzleName = puzzlesFileHandler.readRec(puzzleList.getSelectedIndex()).puzzleName;
             editButton.enable();
             deleteButton.enable();
         }

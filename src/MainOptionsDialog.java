@@ -63,16 +63,6 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
         diffLvlValueLabel.setText(new Integer(userRec.diffLevel).toString());
     }
 
-    public void showWinScreen(int time, int numMoves)
-    {
-        Dialog winDialog = new Dialog((Frame) this.getParent(), "Congratulations!!", true);
-        winDialog.setSize(300, 200);
-        winDialog.setLayout(new FlowLayout());
-        winDialog.add(new Label("Well done, you won that Puzzle in "+time+" seconds!"));
-        winDialog.add(new Label("with "+numMoves+" moves"));
-        winDialog.show();
-    }
-
     public void actionPerformed(ActionEvent e)
     {
         if(e.getActionCommand().equals("Do a Puzzle"))

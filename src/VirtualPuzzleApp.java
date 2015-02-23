@@ -9,6 +9,8 @@ class VirtualPuzzleApp extends Frame
     String puzzlesFName = "data/puzzles.dat";
     
     UsersFileRec currentUserRec = null;
+    int currentUserIx;
+    PuzzlesFileRec currentPuzzleRec = null;
     
  // Hard coded for now:
     int numsegs = 3;
@@ -93,12 +95,37 @@ class VirtualPuzzleApp extends Frame
     
     public void showWinScreen(int time, int numMoves)
     {
-        mainDialog.showWinScreen(time, numMoves);
+        final BaseDialog winDialog = new BaseDialog(this);
+        winDialog.setSize(400, 120);
+        winDialog.setTitle("Congratulations!!");
+        
+        winDialog.top.setLayout(new FlowLayout(FlowLayout.CENTER));
+        winDialog.top.add(new Label("Well done, you won that Puzzle in "+time+" seconds!"));
+        winDialog.main.setLayout(new FlowLayout(FlowLayout.CENTER));
+        winDialog.main.add(new Label("with "+numMoves+" moves"));
+        
+        Button okButton = new Button ("OK");
+        okButton.addActionListener ( new ActionListener()
+            {
+                public void actionPerformed( ActionEvent e )
+                {
+                    winDialog.setVisible(false);
+                    showMainDialog();
+                }
+            });
+        winDialog.bottom.setLayout(new FlowLayout(FlowLayout.CENTER));
+        winDialog.bottom.add(okButton);
+        
+        winDialog.add(winDialog.top,BorderLayout.NORTH);
+        winDialog.add(winDialog.main,BorderLayout.CENTER);
+        winDialog.add(winDialog.bottom,BorderLayout.SOUTH);
+        winDialog.show();
     }
     
-    public void loadUser(UsersFileRec userRec)
+    public void loadUser(int userIx, UsersFileRec userRec)
     {
         currentUserRec = userRec;
+        currentUserIx = userIx;
         mainDialog.loadUserRec(currentUserRec);
     }
     
@@ -112,6 +139,7 @@ class VirtualPuzzleApp extends Frame
             showMessageDialog("Unable to load puzzle image file " + puzzleRec.imgFileName);
             return false;
         }
+        currentPuzzleRec = puzzleRec;
         
         return true;
     }
@@ -137,6 +165,74 @@ class VirtualPuzzleApp extends Frame
 
         messageDialog.pack();
         messageDialog.setVisible(true);
+    }
+    
+    public void updateUserScore(int newTimeTaken, int newNumMoves)
+    {
+        boolean scoreWasUpdated = false;
+        
+        for(int scoreRecIx = 0; scoreRecIx < currentUserRec.puzzleScores.size(); scoreRecIx++)
+        {
+            if(currentUserRec.puzzleScores.get(scoreRecIx).puzzleName.equals(currentPuzzleRec.puzzleName))
+            {
+                UserPuzzleScoreRec scoreRec = currentUserRec.puzzleScores.get(scoreRecIx);
+                if((newTimeTaken * newNumMoves) < (scoreRec.timeTaken * scoreRec.numMoves))
+                {
+                    scoreRec.timeTaken = newTimeTaken;
+                    scoreRec.numMoves = newNumMoves;
+                }
+                currentUserRec.puzzleScores.set(scoreRecIx, scoreRec);
+                scoreWasUpdated = true;
+            }
+        }
+        
+        if(scoreWasUpdated == false)
+        {
+            UserPuzzleScoreRec scoreRec = new UserPuzzleScoreRec();
+            scoreRec.puzzleName = currentPuzzleRec.puzzleName;
+            scoreRec.timeTaken = newTimeTaken;
+            scoreRec.numMoves = newNumMoves;
+            currentUserRec.puzzleScores.add(scoreRec);
+        }
+
+        FileHandler<UsersFileRec> usersFileHandler = new FileHandler(usersFName);
+        usersFileHandler.updateRec(currentUserIx, currentUserRec);
+    }
+    
+    public void updateScoreRecords(String oldPuzzleName, PuzzlesFileRec puzzleRec)
+    {
+        FileHandler<UsersFileRec> usersFileHandler = new FileHandler(usersFName);
+        for(int userIx = 0; userIx < usersFileHandler.numRecords(); userIx++)
+        {
+            UsersFileRec userRec = usersFileHandler.readRec(userIx);
+            for(int scoreRecIx = 0; scoreRecIx < userRec.puzzleScores.size(); scoreRecIx++)
+            {
+                if(userRec.puzzleScores.get(scoreRecIx).puzzleName.equals(oldPuzzleName))
+                {
+                    UserPuzzleScoreRec newScoreRec = userRec.puzzleScores.get(scoreRecIx);
+                    newScoreRec.puzzleName = new String(puzzleRec.puzzleName);
+                    userRec.puzzleScores.set(scoreRecIx, newScoreRec);
+                    usersFileHandler.updateRec(userIx, userRec);
+                }
+            }
+        }
+    }
+    
+    public void removeUnneededScoreRecords(String oldPuzzleName)
+    {
+        FileHandler<UsersFileRec> usersFileHandler = new FileHandler(usersFName);
+        for(int userIx = 0; userIx < usersFileHandler.numRecords(); userIx++)
+        {
+            UsersFileRec userRec = usersFileHandler.readRec(userIx);
+            for(int scoreRecIx = 0; scoreRecIx < userRec.puzzleScores.size(); scoreRecIx++)
+            {
+                if(userRec.puzzleScores.get(scoreRecIx).puzzleName.equals(oldPuzzleName))
+                {
+                    userRec.puzzleScores.remove(scoreRecIx);
+                    usersFileHandler.updateRec(userIx, userRec);
+                }
+            }
+        }
     }
     
     

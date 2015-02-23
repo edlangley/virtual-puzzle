@@ -114,7 +114,7 @@ class ChooseUserDialog extends BaseDialog implements ActionListener, ItemListene
             
             if(nameList.getSelectedIndex() >= 0)
             {
-                parentVPuzzle.loadUser(usersFileHandler.readRec(nameList.getSelectedIndex()));
+                parentVPuzzle.loadUser(nameList.getSelectedIndex(), usersFileHandler.readRec(nameList.getSelectedIndex()));
                 hide();
                 parentVPuzzle.showMainDialog();
             }
