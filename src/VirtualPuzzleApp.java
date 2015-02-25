@@ -30,7 +30,7 @@ class VirtualPuzzleApp extends Frame
     public static void main(String args[]) throws IOException
     {
         VirtualPuzzleApp mainFrame = new VirtualPuzzleApp();
-        mainFrame.setSize(800, 600);
+        mainFrame.setExtendedState(MAXIMIZED_BOTH);
         mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
         
