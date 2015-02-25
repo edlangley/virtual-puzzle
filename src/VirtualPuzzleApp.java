@@ -84,7 +84,7 @@ class VirtualPuzzleApp extends Frame
     
     public void showChoosePuzzleDialog()
     {
-        puzzleChooseDialog.loadPuzzleList(puzzlesFName);
+        puzzleChooseDialog.loadPuzzleList(puzzlesFName, currentUserRec);
         puzzleChooseDialog.show();
     }
     
@@ -193,10 +193,19 @@ class VirtualPuzzleApp extends Frame
             scoreRec.timeTaken = newTimeTaken;
             scoreRec.numMoves = newNumMoves;
             currentUserRec.puzzleScores.add(scoreRec);
+            
+            currentUserRec.numPuzzlesDone++;
+        }
+        
+        if((newTimeTaken * newNumMoves) > currentUserRec.diffLevel)
+        {
+            currentUserRec.diffLevel = (newTimeTaken * newNumMoves);
         }
 
         FileHandler<UsersFileRec> usersFileHandler = new FileHandler(usersFName);
         usersFileHandler.updateRec(currentUserIx, currentUserRec);
+        
+        mainDialog.loadUserRec(currentUserRec);
     }
     
     public void updateScoreRecords(String oldPuzzleName, PuzzlesFileRec puzzleRec)
@@ -216,6 +225,8 @@ class VirtualPuzzleApp extends Frame
                 }
             }
         }
+        
+        currentUserRec = usersFileHandler.readRec(currentUserIx);
     }
     
     public void removeUnneededScoreRecords(String oldPuzzleName)
@@ -233,6 +244,8 @@ class VirtualPuzzleApp extends Frame
                 }
             }
         }
+        
+        currentUserRec = usersFileHandler.readRec(currentUserIx);
     }
     
     
