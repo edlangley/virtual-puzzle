@@ -8,32 +8,28 @@ class Puzzle extends Panel implements Runnable
 {
     VirtualPuzzleApp parentVPuzzle;
     
-
     private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY; // passed in
     private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY; // calculated
     private int scaledSegSizeX, scaledSegSizeY;
-
+    
     private int blankIndexX, blankIndexY;
     PuzzleSegment[][] positions;
     Image mainPic = null;
-
+    
     Toolkit toolkit = Toolkit.getDefaultToolkit();
-
-    //Threading stuff
+    
     Thread timer = new Thread(this);
     MediaTracker track = new MediaTracker(this);
-    //Time timeElapsed in seconds
-    int timeElapsed = 0;
     
-    //Time display
-    Panel p1 = new Panel();
+    int timeElapsedSecs = 0;
+    Panel timePanel = new Panel();
     Label timeText = new Label();
     
     int numMovesMade = 0;
     boolean loaded = false;
     boolean ready = false;
     boolean won = false;
-
+    
     public Puzzle(VirtualPuzzleApp parent)
     {
         parentVPuzzle = parent;
@@ -46,8 +42,8 @@ class Puzzle extends Panel implements Runnable
         puzzleWidthLimit = limit;
         puzzleHeightLimit = limit;
         timeText.setAlignment(Label.LEFT);
-        p1.add(timeText);
-        parentVPuzzle.add(p1, BorderLayout.SOUTH);
+        timePanel.add(timeText);
+        parentVPuzzle.add(timePanel, BorderLayout.SOUTH);
 
         loaded = loadImage(picName);
         if(loaded)
@@ -57,30 +53,31 @@ class Puzzle extends Panel implements Runnable
             this.numSegsY = numSegsY;
             picSegSizeY = (mainPic.getHeight(this) / numSegsY);
             
-            positions = new PuzzleSegment[numSegsX][numSegsY];//Create the PuzzleSegment array
-            scaleImage(mainPic);// set scaled segsizes for Puzzle
+            positions = new PuzzleSegment[numSegsX][numSegsY];
+            scaleImage(mainPic);
             
-            for(int x = 0; x< numSegsX; x++)   //initialise each element
+            for(int x = 0; x< numSegsX; x++)
+            {
                 for(int y = 0; y< numSegsY; y++)
                 {
                     positions[x][y] = new PuzzleSegment(picSegSizeX*x, picSegSizeY*y, picSegSizeX, picSegSizeY);
-                    //put actual positions of segs into array:
+                    // put actual positions of segments into array:
                     positions[x][y].setActualPos(scaledSegSizeX*x, scaledSegSizeY*y);
-                }    
+                }
+            }
             
-            //set position of blank seg as lower left
+            // set position of blank segment as lower left
             blankIndexX = numSegsX;
             blankIndexY = numSegsY;
             blankIndexX--; blankIndexY--;
             
-            //keep blank index source positions 0 to get through won check
+            // keep blank index source positions 0 to get through won check
             positions[blankIndexX][blankIndexY].correctsX = 0;
             positions[blankIndexX][blankIndexY].correctsY = 0;
             
-            ready = true; //ready for user to play Puzzle
-            //show();
-            jumbleSegs(1000);//jumble up Puzzle before they start
-            timer.start();// start the clock
+            ready = true;
+            jumbleSegs(1000);
+            timer.start();
         }
         else
         {
@@ -93,14 +90,15 @@ class Puzzle extends Panel implements Runnable
 
     public void run()
     {
-        
         while(true)
         {
-            timeElapsed +=1;
-            timeText.setText(String.valueOf(timeElapsed));
-            try{
+            timeElapsedSecs +=1;
+            timeText.setText(String.valueOf(timeElapsedSecs));
+            try
+            {
                 timer.sleep(1000);
-                }catch(InterruptedException e){return;}
+            }
+            catch(InterruptedException e){return;}
         }
     }
 
@@ -110,7 +108,6 @@ class Puzzle extends Panel implements Runnable
         
         if(ready)
         {
-            //draw each seg in array with a nested for loop:
             for(int x = 0; x< numSegsX; x++)
             {
                 for(int y= 0; y< numSegsY; y++)
@@ -123,15 +120,15 @@ class Puzzle extends Panel implements Runnable
                                 positions[x][y].sY+picSegSizeY, this);
                 }
             }
-            //then draw a blank box at blank indexes
+            // draw a blank box at blank indexes
             g.fillRect(offSetX+positions[blankIndexX][blankIndexY].dX, 
                         offSetY+positions[blankIndexX][blankIndexY].dY, 
                         scaledSegSizeX,scaledSegSizeY);
         }
         if(won)
         {
-            parentVPuzzle.updateUserScore(timeElapsed, numMovesMade);
-            parentVPuzzle.showWinScreen(timeElapsed, numMovesMade);
+            parentVPuzzle.updateUserScore(timeElapsedSecs, numMovesMade);
+            parentVPuzzle.showWinScreen(timeElapsedSecs, numMovesMade);
         }
     }  
     
@@ -161,7 +158,6 @@ class Puzzle extends Panel implements Runnable
     
     public void findSegMouse(int x, int y)
     {
-
         boolean foundX = false;
         boolean foundY = false;
         boolean cancel = false;
@@ -170,13 +166,14 @@ class Puzzle extends Panel implements Runnable
         
         x -= offSetX;
         y -= offSetY;
-        System.out.println("offSetX - "+offSetX);
-        System.out.println("offSetY - "+offSetY);
+        System.out.println("offSetX - " + offSetX);
+        System.out.println("offSetY - " + offSetY);
         
-        indexX = x/scaledSegSizeX;
-        indexY = y/scaledSegSizeY;
-        System.out.println("Found X - "+indexX);
-        System.out.println("Found Y - "+indexY);
+        indexX = x / scaledSegSizeX;
+        indexY = y / scaledSegSizeY;
+        System.out.println("Found X - " + indexX);
+        System.out.println("Found Y - " + indexY);
+        
         swapSeg(indexX, indexY, true);
     }
 
@@ -184,19 +181,23 @@ class Puzzle extends Panel implements Runnable
     {
         mainPic = toolkit.getImage(picName);
         track.addImage(mainPic, 0);
-        try{
+        try
+        {
             track.waitForID(0);
-            }catch(InterruptedException e){return(false);}
+        }
+        catch(InterruptedException e)
+        {
+            return(false);
+        }
+        
         if((mainPic.getWidth(this)== -1) && (mainPic.getHeight(this)== -1))
             return(false);
         else
             return(true);
-
     }
 
     private void scaleImage(Image pic1)
-    {//scales the pic segment size by altering scaledSegSizeY & scaledSegSizeX
-
+    {
         if(loaded)
         {
             if (pic1.getHeight(this) > pic1.getWidth(this))
@@ -224,57 +225,51 @@ class Puzzle extends Panel implements Runnable
             
             scaledSegSizeX = (int)(puzzleWidth/numSegsX);
             scaledSegSizeY = (int)(puzzleHeight/numSegsY);
-            
         }
-        
     }
     
     private void jumbleSegs(int numMoves)
     {
         int u = 0;int d = 0;int l = 0;int right = 0;
+        
         for(int i=0; i<numMoves;i++)
         {
             double r = java.lang.Math.random()*10;
             
             if(r <= 2.5)
             {
-                //System.out.println("up");    
                 swapSeg(blankIndexX, blankIndexY-1, false);    
-            }else            
-            if( (r > 2.5) && (r <= 5))
+            }
+            else if( (r > 2.5) && (r <= 5))
             {
-                //System.out.println("down");    
                 swapSeg(blankIndexX, blankIndexY+1, false);    
-            }else            
-            if((r > 5) && (r <= 7.5))
+            }
+            else if((r > 5) && (r <= 7.5))
             {
-                //System.out.println("left");    
                 swapSeg(blankIndexX-1, blankIndexY, false);    
-            }else            
-            if((r > 7.5) && (r <= 10))
+            }
+            else if((r > 7.5) && (r <= 10))
             {
-                //System.out.println("right");    
                 swapSeg(blankIndexX+1, blankIndexY, false);    
             }
         }
     }
     
     private boolean swapSeg(int indexX, int indexY, boolean isPlayer)
-    {                        // indexes of tile to swap with blank
+    {
         
-        if( (indexX<0 || indexX>=numSegsX) || (indexY<0 || indexY>=numSegsY) )
-        {// this is a check for invalid indexes being passed in
-            //System.out.println("Out of bounds");
+        if( (indexX < 0 || indexX >= numSegsX) || (indexY < 0 || indexY >= numSegsY) )
+        {
             return(false);
         }
         
-        if( ((indexX == blankIndexX) && (java.lang.Math.abs(indexY-blankIndexY) == 1))
-            || ((indexY == blankIndexY) && (java.lang.Math.abs(indexX-blankIndexX) == 1)) )
-        {    //above is a check to make sure the indexes are adjecent to the blank indexes
-
+        // is the selected segment adjacent to the blank one?
+        if( ((indexX == blankIndexX) && (java.lang.Math.abs(indexY-blankIndexY) == 1)) ||
+            ((indexY == blankIndexY) && (java.lang.Math.abs(indexX-blankIndexX) == 1)) )
+        {
             int tempPosX, tempPosY, tempSourceX, tempSourceY, tempBlSourceX, tempBlSourceY;
-
-            //swap sources:
+            
+            // swap sources:
             tempSourceX = positions[indexX][indexY].sX;
             tempSourceY = positions[indexX][indexY].sY;
             
@@ -284,7 +279,7 @@ class Puzzle extends Panel implements Runnable
             blankIndexX = indexX;
             blankIndexY = indexY;
             
-            //keep bl index sources 0 to get through win check
+            // keep bl index sources 0 to get through win check
             positions[blankIndexX][blankIndexY].sX = 0;
             positions[blankIndexX][blankIndexY].sY = 0;
             
@@ -295,10 +290,10 @@ class Puzzle extends Panel implements Runnable
             }
             
             repaint();
-            
         }
-        return(true); //success!
-    }//end of swapSeg
+        
+        return(true);
+    }
     
     private boolean checkForWon()
     {
@@ -307,18 +302,18 @@ class Puzzle extends Panel implements Runnable
             for(int y= 0; y< numSegsY; y++)
             {
                 if(positions[x][y].sX != positions[x][y].correctsX ||
-                   positions[x][y].sY != positions[x][y].correctsY     )
+                   positions[x][y].sY != positions[x][y].correctsY)
                 {
                     
-                    System.out.println("\nChecking win: sX: "+positions[x][y].sX+" correctsX: "
-                    +positions[x][y].correctsX);
-                    System.out.println("Checking win: sY: "+positions[x][y].sY+" correctsY: "
-                    +positions[x][y].correctsY);
+                    System.out.println("\nChecking win: sX: " + positions[x][y].sX + " correctsX: " +
+                                            positions[x][y].correctsX);
+                    System.out.println("Checking win: sY: " + positions[x][y].sY + " correctsY: " +
+                                            positions[x][y].correctsY);
                     return(false);
                 }
             }
         }
+        
         return(true);
-    }        
-    
+    }
 }
