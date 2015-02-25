@@ -18,7 +18,7 @@ class Puzzle extends Panel implements Runnable
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     
-    Thread timer = new Thread(this);
+    Thread timer;
     MediaTracker track = new MediaTracker(this);
     
     int timeElapsedSecs = 0;
@@ -26,8 +26,8 @@ class Puzzle extends Panel implements Runnable
     Label timeText = new Label();
     
     int numMovesMade = 0;
-    boolean loaded = false;
     boolean ready = false;
+    boolean timerRunning = false;
     boolean won = false;
     
     public Puzzle(VirtualPuzzleApp parent)
@@ -37,6 +37,13 @@ class Puzzle extends Panel implements Runnable
     
     public boolean load(String picName, int numSegsX, int numSegsY, int picOffsetX, int picOffsetY, int limit)
     {
+        ready = false;
+        won = false;
+        numMovesMade = 0;
+        timeElapsedSecs = 0;
+        timeText.setText(String.valueOf(timeElapsedSecs));
+        timer = new Thread(this);
+        
         offSetX = picOffsetX;
         offSetY = picOffsetY;
         puzzleWidthLimit = limit;
@@ -44,9 +51,8 @@ class Puzzle extends Panel implements Runnable
         timeText.setAlignment(Label.LEFT);
         timePanel.add(timeText);
         parentVPuzzle.add(timePanel, BorderLayout.SOUTH);
-
-        loaded = loadImage(picName);
-        if(loaded)
+        
+        if(loadImage(picName))
         {
             this.numSegsX = numSegsX;
             picSegSizeX = (mainPic.getWidth(this) / numSegsX);
@@ -77,6 +83,7 @@ class Puzzle extends Panel implements Runnable
             
             ready = true;
             jumbleSegs(1000);
+            timerRunning = true;
             timer.start();
         }
         else
@@ -90,13 +97,20 @@ class Puzzle extends Panel implements Runnable
 
     public void run()
     {
-        while(true)
+        int numTicks = 0;
+        
+        while(timerRunning)
         {
-            timeElapsedSecs +=1;
-            timeText.setText(String.valueOf(timeElapsedSecs));
+            if(numTicks++ >= 10)
+            {
+                timeElapsedSecs +=1;
+                timeText.setText(String.valueOf(timeElapsedSecs));
+                
+                numTicks = 0;
+            }
             try
             {
-                timer.sleep(1000);
+                timer.sleep(100);
             }
             catch(InterruptedException e){return;}
         }
@@ -127,6 +141,17 @@ class Puzzle extends Panel implements Runnable
         }
         if(won)
         {
+            won = false;
+            timerRunning = false;
+            try
+            {
+                timer.join();
+            }
+            catch(InterruptedException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
             parentVPuzzle.updateUserScore(timeElapsedSecs, numMovesMade);
             parentVPuzzle.showWinScreen(timeElapsedSecs, numMovesMade);
         }
@@ -198,34 +223,31 @@ class Puzzle extends Panel implements Runnable
 
     private void scaleImage(Image pic1)
     {
-        if(loaded)
+        if (pic1.getHeight(this) > pic1.getWidth(this))
         {
-            if (pic1.getHeight(this) > pic1.getWidth(this))
-            {
-                if(pic1.getHeight(this) > puzzleHeightLimit)
-                    puzzleWidth = pic1.getWidth(this)/(pic1.getHeight(this)/puzzleHeightLimit);
-                else
-                    puzzleWidth = pic1.getWidth(this)*(puzzleHeightLimit/pic1.getHeight(this));    
-                puzzleHeight = puzzleHeightLimit;
-                
-            }
-            else if (pic1.getHeight(this) < pic1.getWidth(this))
-            {
-                if(pic1.getWidth(this) > puzzleWidthLimit)
-                    puzzleHeight = pic1.getHeight(this)/(pic1.getWidth(this)/puzzleWidthLimit);
-                else
-                    puzzleHeight = pic1.getHeight(this)*(puzzleWidthLimit/pic1.getWidth(this));
-                puzzleWidth = puzzleWidthLimit;
-            }
-            else if (pic1.getHeight(this) == pic1.getWidth(this))
-            {
-                puzzleHeight = puzzleHeightLimit;
-                puzzleWidth = puzzleWidthLimit;
-            }
+            if(pic1.getHeight(this) > puzzleHeightLimit)
+                puzzleWidth = pic1.getWidth(this)/(pic1.getHeight(this)/puzzleHeightLimit);
+            else
+                puzzleWidth = pic1.getWidth(this)*(puzzleHeightLimit/pic1.getHeight(this));    
+            puzzleHeight = puzzleHeightLimit;
             
-            scaledSegSizeX = (int)(puzzleWidth/numSegsX);
-            scaledSegSizeY = (int)(puzzleHeight/numSegsY);
         }
+        else if (pic1.getHeight(this) < pic1.getWidth(this))
+        {
+            if(pic1.getWidth(this) > puzzleWidthLimit)
+                puzzleHeight = pic1.getHeight(this)/(pic1.getWidth(this)/puzzleWidthLimit);
+            else
+                puzzleHeight = pic1.getHeight(this)*(puzzleWidthLimit/pic1.getWidth(this));
+            puzzleWidth = puzzleWidthLimit;
+        }
+        else if (pic1.getHeight(this) == pic1.getWidth(this))
+        {
+            puzzleHeight = puzzleHeightLimit;
+            puzzleWidth = puzzleWidthLimit;
+        }
+        
+        scaledSegSizeX = (int)(puzzleWidth/numSegsX);
+        scaledSegSizeY = (int)(puzzleHeight/numSegsY);
     }
     
     private void jumbleSegs(int numMoves)
@@ -238,19 +260,19 @@ class Puzzle extends Panel implements Runnable
             
             if(r <= 2.5)
             {
-                swapSeg(blankIndexX, blankIndexY-1, false);    
+                swapSeg(blankIndexX, blankIndexY-1, false);
             }
             else if( (r > 2.5) && (r <= 5))
             {
-                swapSeg(blankIndexX, blankIndexY+1, false);    
+                swapSeg(blankIndexX, blankIndexY+1, false);
             }
             else if((r > 5) && (r <= 7.5))
             {
-                swapSeg(blankIndexX-1, blankIndexY, false);    
+                swapSeg(blankIndexX-1, blankIndexY, false);
             }
             else if((r > 7.5) && (r <= 10))
             {
-                swapSeg(blankIndexX+1, blankIndexY, false);    
+                swapSeg(blankIndexX+1, blankIndexY, false);
             }
         }
     }

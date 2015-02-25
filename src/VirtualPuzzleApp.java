@@ -119,7 +119,7 @@ class VirtualPuzzleApp extends Frame
         winDialog.add(winDialog.top,BorderLayout.NORTH);
         winDialog.add(winDialog.main,BorderLayout.CENTER);
         winDialog.add(winDialog.bottom,BorderLayout.SOUTH);
-        winDialog.show();
+        winDialog.setVisible(true);
     }
     
     public void loadUser(int userIx, UsersFileRec userRec)
