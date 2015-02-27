@@ -4,13 +4,15 @@ import java.awt.Toolkit.*;
 import java.awt.image.*;
 import java.util.*;
 
-class Puzzle extends Panel implements Runnable
+class Puzzle extends Panel implements Runnable, ComponentListener
 {
+    private static int NUM_JUMBLE_SEG_SWAPS = 1000;
+    private static int PUZZLE_MARGIN = 5;
+    
     VirtualPuzzleApp parentVPuzzle;
     
-    private int puzzleWidthLimit, puzzleHeightLimit, offSetX, offSetY; // passed in
-    private int puzzleWidth, puzzleHeight, numSegsX, numSegsY, picSegSizeX, picSegSizeY; // calculated
-    private int scaledSegSizeX, scaledSegSizeY;
+    private int puzzleWidth, puzzleHeight, offSetX, offSetY;
+    private int numSegsX, numSegsY, picSegSizeX, picSegSizeY, scaledSegSizeX, scaledSegSizeY;
     
     private int blankIndexX, blankIndexY;
     PuzzleSegment[][] positions;
@@ -33,9 +35,11 @@ class Puzzle extends Panel implements Runnable
     public Puzzle(VirtualPuzzleApp parent)
     {
         parentVPuzzle = parent;
+        
+        addComponentListener(this);
     }
     
-    public boolean load(String picName, int numSegsX, int numSegsY, int picOffsetX, int picOffsetY, int limit)
+    public boolean load(String picName, int numSegsX, int numSegsY)
     {
         ready = false;
         won = false;
@@ -44,10 +48,6 @@ class Puzzle extends Panel implements Runnable
         timeText.setText(String.valueOf(timeElapsedSecs));
         timer = new Thread(this);
         
-        offSetX = picOffsetX;
-        offSetY = picOffsetY;
-        puzzleWidthLimit = limit;
-        puzzleHeightLimit = limit;
         timeText.setAlignment(Label.LEFT);
         timePanel.add(timeText);
         parentVPuzzle.add(timePanel, BorderLayout.SOUTH);
@@ -60,7 +60,8 @@ class Puzzle extends Panel implements Runnable
             picSegSizeY = (mainPic.getHeight(this) / numSegsY);
             
             positions = new PuzzleSegment[numSegsX][numSegsY];
-            scaleImage(mainPic);
+            
+            calcScaleAndOffset();
             
             for(int x = 0; x< numSegsX; x++)
             {
@@ -82,7 +83,7 @@ class Puzzle extends Panel implements Runnable
             positions[blankIndexX][blankIndexY].correctsY = 0;
             
             ready = true;
-            jumbleSegs(1000);
+            jumbleSegs(NUM_JUMBLE_SEG_SWAPS);
             timerRunning = true;
             timer.start();
         }
@@ -201,7 +202,7 @@ class Puzzle extends Panel implements Runnable
         
         swapSeg(indexX, indexY, true);
     }
-
+    
     private boolean loadImage(String picName)
     {
         mainPic = toolkit.getImage(picName);
@@ -220,34 +221,48 @@ class Puzzle extends Panel implements Runnable
         else
             return(true);
     }
-
-    private void scaleImage(Image pic1)
+    
+    private void calcScaleAndOffset()
     {
-        if (pic1.getHeight(this) > pic1.getWidth(this))
+        int panelHeight = getSize().height;
+        int panelWidth = getSize().width;
+        int imageHeight = mainPic.getHeight(this);
+        int imageWidth = mainPic.getWidth(this);
+        
+        if(panelHeight >= panelWidth)
         {
-            if(pic1.getHeight(this) > puzzleHeightLimit)
-                puzzleWidth = pic1.getWidth(this)/(pic1.getHeight(this)/puzzleHeightLimit);
+            if((imageHeight >= imageWidth) &&
+               (((float)imageHeight / (float)imageWidth) >= ((float)panelHeight / (float)panelWidth)))
+            {
+                puzzleHeight = panelHeight - (PUZZLE_MARGIN * 2);
+                puzzleWidth = (int) (imageWidth / ((float)imageHeight / puzzleHeight));
+            }
             else
-                puzzleWidth = pic1.getWidth(this)*(puzzleHeightLimit/pic1.getHeight(this));    
-            puzzleHeight = puzzleHeightLimit;
-            
+            {
+                puzzleWidth = panelWidth - (PUZZLE_MARGIN * 2);
+                puzzleHeight = (int) (imageHeight / ((float)imageWidth / puzzleWidth));
+            }
         }
-        else if (pic1.getHeight(this) < pic1.getWidth(this))
+        else
         {
-            if(pic1.getWidth(this) > puzzleWidthLimit)
-                puzzleHeight = pic1.getHeight(this)/(pic1.getWidth(this)/puzzleWidthLimit);
+            if((imageHeight < imageWidth) &&
+               (((float)imageWidth / (float)imageHeight) >= ((float)panelWidth / (float)panelHeight)))
+            {
+                puzzleWidth = panelWidth - (PUZZLE_MARGIN * 2);
+                puzzleHeight = (int) (imageHeight / ((float)imageWidth / puzzleWidth));
+            }
             else
-                puzzleHeight = pic1.getHeight(this)*(puzzleWidthLimit/pic1.getWidth(this));
-            puzzleWidth = puzzleWidthLimit;
-        }
-        else if (pic1.getHeight(this) == pic1.getWidth(this))
-        {
-            puzzleHeight = puzzleHeightLimit;
-            puzzleWidth = puzzleWidthLimit;
+            {
+                puzzleHeight = panelHeight - (PUZZLE_MARGIN * 2);
+                puzzleWidth = (int) (imageWidth / ((float)imageHeight / puzzleHeight));
+            }
         }
         
         scaledSegSizeX = (int)(puzzleWidth/numSegsX);
         scaledSegSizeY = (int)(puzzleHeight/numSegsY);
+        
+        offSetX = (getSize().width / 2) - (puzzleWidth / 2);
+        offSetY = (getSize().height / 2) - (puzzleHeight / 2);
     }
     
     private void jumbleSegs(int numMoves)
@@ -337,5 +352,38 @@ class Puzzle extends Panel implements Runnable
         }
         
         return(true);
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent arg0)
+    {
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent arg0)
+    {
+    }
+
+    @Override
+    public void componentResized(ComponentEvent arg0)
+    {
+        if(ready)
+        {
+            calcScaleAndOffset();
+            
+            for(int x = 0; x< numSegsX; x++)
+            {
+                for(int y = 0; y< numSegsY; y++)
+                {
+                    positions[x][y].setActualPos(scaledSegSizeX*x, scaledSegSizeY*y);
+                }
+            }
+        }
+        
+    }
+
+    @Override
+    public void componentShown(ComponentEvent arg0)
+    {
     }
 }

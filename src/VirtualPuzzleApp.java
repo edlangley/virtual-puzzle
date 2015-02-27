@@ -12,12 +12,6 @@ class VirtualPuzzleApp extends Frame
     int currentUserIx;
     PuzzlesFileRec currentPuzzleRec = null;
     
- // Hard coded for now:
-    int numsegs = 3;
-    int picOffsetX = 10;
-    int picOffsetY = 10;
-    int maxPuzzleScaledDimensionPx = 800;
-    
     MenuBar menuBar = new MenuBar();
     Menu fileMenu = new Menu("File");
     
@@ -30,6 +24,7 @@ class VirtualPuzzleApp extends Frame
     public static void main(String args[]) throws IOException
     {
         VirtualPuzzleApp mainFrame = new VirtualPuzzleApp();
+        mainFrame.setSize(800, 600);
         mainFrame.setExtendedState(MAXIMIZED_BOTH);
         mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
@@ -132,9 +127,7 @@ class VirtualPuzzleApp extends Frame
     public boolean loadPuzzle(PuzzlesFileRec puzzleRec)
     {
         if(puzzle1.load(puzzleRec.imgFileName,
-                        puzzleRec.numSegmentsX, puzzleRec.numSegmentsY,
-                        picOffsetX, picOffsetY,
-                        maxPuzzleScaledDimensionPx) == false)
+                        puzzleRec.numSegmentsX, puzzleRec.numSegmentsY) == false)
         {
             showMessageDialog("Unable to load puzzle image file " + puzzleRec.imgFileName);
             return false;
