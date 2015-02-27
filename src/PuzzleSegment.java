@@ -6,9 +6,7 @@ import java.util.*;
 
 class PuzzleSegment
 {
-    //int itsPosX, itsPosY;
-    //int sourcePosX, sourcePosY;
-    int sX,sY,dX,dY;
+    int sX, sY, dX, dY;
     int correctsX, correctsY;
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -26,21 +24,4 @@ class PuzzleSegment
         dX = x;
         dY = y;
     }
-
-    /* move to keydown event handler
-    public void moveSegment(int direction)
-    {
-        switch(direction)
-        {
-            case(1):
-                    System.out.println("Up");break;
-            case(2):
-                System.out.println("Down");break;
-            case(3):
-                System.out.println("Left");break;
-            case(4):
-                System.out.println("Right");break;
-            default:System.out.println("You shouldn't get here");
-        }
-    }*/
 }
