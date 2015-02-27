@@ -30,6 +30,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
     int numMovesMade = 0;
     boolean ready = false;
     boolean timerRunning = false;
+    boolean paused = false;
     boolean won = false;
     
     public Puzzle(VirtualPuzzleApp parent)
@@ -42,6 +43,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
     public boolean load(String picName, int numSegsX, int numSegsY)
     {
         ready = false;
+        paused = false;
         won = false;
         numMovesMade = 0;
         timeElapsedSecs = 0;
@@ -102,12 +104,15 @@ class Puzzle extends Panel implements Runnable, ComponentListener
         
         while(timerRunning)
         {
-            if(numTicks++ >= 10)
+            if(!paused)
             {
-                timeElapsedSecs +=1;
-                timeText.setText(String.valueOf(timeElapsedSecs));
-                
-                numTicks = 0;
+                if(numTicks++ >= 10)
+                {
+                    timeElapsedSecs +=1;
+                    timeText.setText(String.valueOf(timeElapsedSecs));
+                    
+                    numTicks = 0;
+                }
             }
             try
             {
@@ -160,47 +165,63 @@ class Puzzle extends Panel implements Runnable, ComponentListener
     
     public void findSegKeyboard(KeyEvent e)
     {
-        if(e.getKeyCode() == e.VK_UP)
+        if(!paused)
         {
-            System.out.println("Up");
-            swapSeg(blankIndexX, blankIndexY-1, true);
-        }
-        if(e.getKeyCode() == e.VK_DOWN)
-        {
-            System.out.println("Down");
-            swapSeg(blankIndexX, blankIndexY+1, true);
-        }
-        if(e.getKeyCode() == e.VK_LEFT)
-        {
-            System.out.println("Left");
-            swapSeg(blankIndexX-1, blankIndexY, true);
-        }
-        if(e.getKeyCode() == e.VK_RIGHT)
-        {
-            System.out.println("Right");
-            swapSeg(blankIndexX+1, blankIndexY, true);
+            if(e.getKeyCode() == e.VK_UP)
+            {
+                System.out.println("Up");
+                swapSeg(blankIndexX, blankIndexY-1, true);
+            }
+            if(e.getKeyCode() == e.VK_DOWN)
+            {
+                System.out.println("Down");
+                swapSeg(blankIndexX, blankIndexY+1, true);
+            }
+            if(e.getKeyCode() == e.VK_LEFT)
+            {
+                System.out.println("Left");
+                swapSeg(blankIndexX-1, blankIndexY, true);
+            }
+            if(e.getKeyCode() == e.VK_RIGHT)
+            {
+                System.out.println("Right");
+                swapSeg(blankIndexX+1, blankIndexY, true);
+            }
         }
     }
     
     public void findSegMouse(int x, int y)
     {
-        boolean foundX = false;
-        boolean foundY = false;
-        boolean cancel = false;
-        int indexX = 0;
-        int indexY = 0;
+        if(!paused)
+        {
+            boolean foundX = false;
+            boolean foundY = false;
+            boolean cancel = false;
+            int indexX = 0;
+            int indexY = 0;
+            
+            x -= offSetX;
+            y -= offSetY;
+            System.out.println("offSetX - " + offSetX);
+            System.out.println("offSetY - " + offSetY);
+            
+            indexX = x / scaledSegSizeX;
+            indexY = y / scaledSegSizeY;
+            System.out.println("Found X - " + indexX);
+            System.out.println("Found Y - " + indexY);
+            
+            swapSeg(indexX, indexY, true);
+        }
+    }
+    
+    public void setPaused(boolean pauseVal)
+    {
+        paused = pauseVal;
         
-        x -= offSetX;
-        y -= offSetY;
-        System.out.println("offSetX - " + offSetX);
-        System.out.println("offSetY - " + offSetY);
-        
-        indexX = x / scaledSegSizeX;
-        indexY = y / scaledSegSizeY;
-        System.out.println("Found X - " + indexX);
-        System.out.println("Found Y - " + indexY);
-        
-        swapSeg(indexX, indexY, true);
+        if(paused)
+        {
+            timeText.setText("Paused");
+        }
     }
     
     private boolean loadImage(String picName)

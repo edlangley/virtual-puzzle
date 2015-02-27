@@ -3,7 +3,7 @@ import java.awt.event.*;
 import java.io.IOException;
 
 class VirtualPuzzleApp extends Frame
-    implements ActionListener, MouseListener, MouseMotionListener, KeyListener
+    implements ActionListener, ItemListener, MouseListener, KeyListener
 {
     String usersFName = "data/users.dat";
     String puzzlesFName = "data/puzzles.dat";
@@ -14,6 +14,10 @@ class VirtualPuzzleApp extends Frame
     
     MenuBar menuBar = new MenuBar();
     Menu fileMenu = new Menu("File");
+    MenuItem logonMenuItem = new MenuItem("Back to Logon");
+    MenuItem mainOptionsMenuItem = new MenuItem("Back to Menu");
+    CheckboxMenuItem pauseMenuItem = new CheckboxMenuItem("Pause");
+    MenuItem exitMenuItem = new MenuItem("Exit");
     
     Puzzle puzzle1;
     ChooseUserDialog userChooseDialog;
@@ -45,16 +49,18 @@ class VirtualPuzzleApp extends Frame
         
         setLayout(new BorderLayout());
         
-        MenuItem[] file = { new MenuItem("Back to Logon"),
-                            new MenuItem("Back to Menu"),
-                            new MenuItem("Pause") };
-        for(int i = 0;i<file.length;i++)
-            fileMenu.add(file[i]);
+        fileMenu.add(logonMenuItem);
+        fileMenu.add(mainOptionsMenuItem);
+        fileMenu.add(pauseMenuItem);
         fileMenu.addSeparator();
-        fileMenu.add(new MenuItem("Exit"));
-        
+        fileMenu.add(exitMenuItem);
         menuBar.add(fileMenu);
         setMenuBar(menuBar);
+        
+        logonMenuItem.addActionListener(this);
+        mainOptionsMenuItem.addActionListener(this);
+        pauseMenuItem.addItemListener(this);
+        exitMenuItem.addActionListener(this);
         
         userChooseDialog = new ChooseUserDialog(this, usersFName);
         mainDialog = new MainOptionsDialog(this);
@@ -244,6 +250,21 @@ class VirtualPuzzleApp extends Frame
     
     public void actionPerformed(ActionEvent e)
     {
+        if(e.getActionCommand().equals("Back to Logon"))
+        {
+            puzzle1.setPaused(true);
+            showChooseUserDialog();
+        }
+        else if(e.getActionCommand().equals("Back to Menu"))
+        {
+            puzzle1.setPaused(true);
+            showMainDialog();
+        }
+    }
+    
+    public void itemStateChanged(ItemEvent e)
+    {
+        puzzle1.setPaused(pauseMenuItem.getState());
     }
 
     public void mouseClicked(MouseEvent e)
