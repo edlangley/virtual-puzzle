@@ -20,7 +20,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
     
     Toolkit toolkit = Toolkit.getDefaultToolkit();
     
-    Thread timer;
+    Thread timer = null;
     MediaTracker track = new MediaTracker(this);
     
     int timeElapsedSecs = 0;
@@ -47,8 +47,21 @@ class Puzzle extends Panel implements Runnable, ComponentListener
         won = false;
         numMovesMade = 0;
         timeElapsedSecs = 0;
-        timeText.setText(String.valueOf(timeElapsedSecs));
+        timerRunning = false;
+        if(timer != null)
+        {
+            try
+            {
+                timer.join();
+            }
+            catch(InterruptedException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
         timer = new Thread(this);
+        timeText.setText(String.valueOf(timeElapsedSecs));
         
         timeText.setAlignment(Label.LEFT);
         timePanel.add(timeText);
@@ -158,6 +171,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
+            timer = null;
             parentVPuzzle.updateUserScore(timeElapsedSecs, numMovesMade);
             parentVPuzzle.showWinScreen(timeElapsedSecs, numMovesMade);
         }
