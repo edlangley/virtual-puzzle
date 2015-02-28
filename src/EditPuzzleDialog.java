@@ -120,7 +120,7 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
             FileDialog d = new FileDialog(parentVPuzzle, "What file do you want to open?");
             d.setFile("*.jpg");
             d.setDirectory("."); // Current directory
-            d.show();
+            d.setVisible(true);
             String yourFile = "*.*";
             if((yourFile = d.getFile()) != null)
             {
@@ -159,7 +159,7 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
             }
             newPuzzleRec.numSegmentsY = numSegs.intValue();
             
-            hide();
+            setVisible(false);
             if(currentRecIx == -1)
             {
                 parentPuzzleManageDlg.addNewPuzzle(newPuzzleRec);
@@ -171,7 +171,7 @@ public class EditPuzzleDialog extends BaseDialog implements ActionListener
         }
         else if(e.getActionCommand().equals("Cancel"))
         {
-            hide();
+            setVisible(false);
         }
     }
 }

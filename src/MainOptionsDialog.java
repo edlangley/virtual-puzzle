@@ -67,17 +67,17 @@ class MainOptionsDialog extends BaseDialog implements ActionListener
     {
         if(e.getActionCommand().equals("Do a Puzzle"))
         {
-            hide();
+            setVisible(false);
             parentVPuzzle.showChoosePuzzleDialog();
         }
         else if(e.getActionCommand().equals("Manage Puzzles"))
         {
-            hide();
+            setVisible(false);
             parentVPuzzle.showManagePuzzlesDialog();
         }
         else if(e.getActionCommand().equals("Change User"))
         {
-            hide();
+            setVisible(false);
             parentVPuzzle.showChooseUserDialog();
         }
         else if(e.getActionCommand().equals("Quit"))

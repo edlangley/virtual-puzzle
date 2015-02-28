@@ -28,9 +28,6 @@ class VirtualPuzzleApp extends Frame
     public static void main(String args[]) throws IOException
     {
         VirtualPuzzleApp mainFrame = new VirtualPuzzleApp();
-        mainFrame.setSize(800, 600);
-        mainFrame.setExtendedState(MAXIMIZED_BOTH);
-        mainFrame.setTitle("Virtual Puzzle");
         mainFrame.setVisible(true);
         
         mainFrame.showChooseUserDialog();
@@ -48,6 +45,10 @@ class VirtualPuzzleApp extends Frame
         });
         
         setLayout(new BorderLayout());
+        
+        setSize(800, 600);
+        setExtendedState(MAXIMIZED_BOTH);
+        setTitle("Virtual Puzzle");
         
         fileMenu.add(logonMenuItem);
         fileMenu.add(mainOptionsMenuItem);
@@ -75,23 +76,23 @@ class VirtualPuzzleApp extends Frame
     
     public void showChooseUserDialog()
     {
-        userChooseDialog.show();
+        userChooseDialog.setVisible(true);
     }
     
     public void showMainDialog()
     {
-        mainDialog.show();
+        mainDialog.setVisible(true);
     }
     
     public void showChoosePuzzleDialog()
     {
         puzzleChooseDialog.loadPuzzleList(puzzlesFName, currentUserRec);
-        puzzleChooseDialog.show();
+        puzzleChooseDialog.setVisible(true);
     }
     
     public void showManagePuzzlesDialog()
     {
-        puzzlesManageDialog.show();
+        puzzlesManageDialog.setVisible(true);
     }
     
     public void showWinScreen(int time, int numMoves)

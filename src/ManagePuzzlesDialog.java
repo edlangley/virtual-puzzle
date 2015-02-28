@@ -94,14 +94,14 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemList
         if(e.getActionCommand().equals("Add"))
         {
             editDialog.clearForm();
-            editDialog.show();
+            editDialog.setVisible(true);
         }
         else if(e.getActionCommand().equals("Edit"))
         {
             if(puzzleList.getSelectedIndex() >= 0)
             {
                 editDialog.loadPuzzleRecord(puzzleList.getSelectedIndex(), puzzlesFileHandler.readRec(puzzleList.getSelectedIndex()));
-                editDialog.show();
+                editDialog.setVisible(true);
             }
         }
         else if(e.getActionCommand().equals("Delete"))
@@ -115,7 +115,7 @@ class ManagePuzzlesDialog extends BaseDialog implements ActionListener, ItemList
         }
         else if(e.getActionCommand().equals("Back"))
         {
-            hide();
+            setVisible(false);
             parentVPuzzle.showMainDialog();
         }
     }

@@ -72,12 +72,12 @@ public class EditUserDialog extends BaseDialog implements ActionListener
             newUserRec.fName = firstNameText.getText();
             newUserRec.lName = lastNameText.getText();
             
-            hide();
+            setVisible(false);
             parentUserChooseDlg.addNewUser(newUserRec);
         }
         else if(e.getActionCommand().equals("Cancel"))
         {
-            hide();
+            setVisible(false);
         }
     }
 }

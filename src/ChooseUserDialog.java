@@ -96,7 +96,7 @@ class ChooseUserDialog extends BaseDialog implements ActionListener, ItemListene
     {
         if(e.getActionCommand().equals("Add"))
         {
-            editDialog.show();
+            editDialog.setVisible(true);
         }
         else if(e.getActionCommand().equals("Delete"))
         {
@@ -115,7 +115,7 @@ class ChooseUserDialog extends BaseDialog implements ActionListener, ItemListene
             if(nameList.getSelectedIndex() >= 0)
             {
                 parentVPuzzle.loadUser(nameList.getSelectedIndex(), usersFileHandler.readRec(nameList.getSelectedIndex()));
-                hide();
+                setVisible(false);
                 parentVPuzzle.showMainDialog();
             }
         }

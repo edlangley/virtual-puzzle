@@ -137,12 +137,12 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener, ListSelec
             PuzzlesFileRec chosenPuzzleRec = puzzlesFileHandler.readRec(recIx);
             if(parentVPuzzle.loadPuzzle(chosenPuzzleRec) == true)
             {
-                hide();
+                setVisible(false);
             }
         }
         else if(e.getActionCommand().equals("Back"))
         {
-            hide();
+            setVisible(false);
             parentVPuzzle.showMainDialog();
         }
     }
