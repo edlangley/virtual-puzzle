@@ -8,6 +8,8 @@ class Puzzle extends Panel implements Runnable, ComponentListener
 {
     private static int NUM_JUMBLE_SEG_SWAPS = 1000;
     private static int PUZZLE_MARGIN = 5;
+    private static Color BLANK_SEGMENT_COLOR = new Color(0, 140, 255);
+    private static Color BACKGROUND_COLOR = new Color(255, 252, 102);
     
     VirtualPuzzleApp parentVPuzzle;
     
@@ -37,6 +39,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
     {
         parentVPuzzle = parent;
         
+        setBackground(BACKGROUND_COLOR);
         addComponentListener(this);
     }
     
@@ -137,7 +140,7 @@ class Puzzle extends Panel implements Runnable, ComponentListener
 
     public void paint(Graphics g)
     {
-        g.setColor(Color.blue);
+        g.setColor(BLANK_SEGMENT_COLOR);
         
         if(ready)
         {
