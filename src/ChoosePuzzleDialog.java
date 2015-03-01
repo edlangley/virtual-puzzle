@@ -17,8 +17,6 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener, ListSelec
     VirtualPuzzleApp parentVPuzzle;
     
     Label topLabel = new Label("Choose a puzzle");
-    String diffLevelString = "Current difficulty level available: ";
-    Label diffLevelLabel = new Label(diffLevelString);
     Button goButton = new Button("Go");
     
     private JTable puzzleTable = new JTable();
@@ -56,10 +54,6 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener, ListSelec
         gridbag.setConstraints(puzzleScrollPane, constraints);
         main.add(puzzleScrollPane);
         
-        constraints.weighty = 0.0;
-        gridbag.setConstraints(diffLevelLabel, constraints);
-        main.add(diffLevelLabel);
-        
         bottom.setLayout(new FlowLayout(FlowLayout.RIGHT));
         bottom.add(goButton);
         bottom.add(backButton);
@@ -78,7 +72,7 @@ class ChoosePuzzleDialog extends BaseDialog implements ActionListener, ListSelec
         
         DefaultTableModel newTableData = new DefaultTableModel(0, 3)
         {
-            String columnNames[] = { "Puzzle Name", "Time", "Num Moves" };
+            String columnNames[] = { "Puzzle Name", "Best Time", "Num Moves" };
             
             public String getColumnName(int index)
             { 
