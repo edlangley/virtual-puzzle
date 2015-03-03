@@ -17,9 +17,9 @@ public class EditUserDialog extends BaseDialog implements ActionListener
     VirtualPuzzleApp parentVPuzzle;
     ChooseUserDialog parentUserChooseDlg;
     
-    Label firstNameLabel = new Label("Puzzle Name:");
+    Label firstNameLabel = new Label("First Name:");
     TextField firstNameText = new TextField(20);
-    Label lastNameLabel = new Label("Puzzle Name:");
+    Label lastNameLabel = new Label("Last Name:");
     TextField lastNameText = new TextField(20);
     
     Button okButton = new Button("OK");

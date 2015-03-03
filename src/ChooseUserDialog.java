@@ -8,7 +8,7 @@ class ChooseUserDialog extends BaseDialog implements ActionListener, ItemListene
 {
     VirtualPuzzleApp parentVPuzzle;
 
-    Label topLabel1 = new Label("Pick Your name from the list\nnext line");
+    Label topLabel1 = new Label("Pick Your name from the list");
     Label topLabel2 = new Label("If this is your first time using this software");
     Label topLabel3 = new Label("click add.");
     Button addButton = new Button("Add");
